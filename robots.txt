@@ -1,14 +1,28 @@
+# Default: allow all bots
 User-agent: *
+Disallow:
+
+# Block some known AI/data scrapers
+User-agent: GPTBot
 Disallow: /
 
-User-agent: Googlebot
-Disallow:
+User-agent: ChatGPT-User
+Disallow: /
 
-User-agent: Googlebot-Image
-Disallow:
+User-agent: CCBot
+Disallow: /
 
-User-agent: Googlebot-News
-Disallow:
+User-agent: ClaudeBot
+Disallow: /
 
-User-agent: Googlebot-Video
-Disallow:
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
