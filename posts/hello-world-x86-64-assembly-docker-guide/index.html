@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.ico"><meta name="generator" content="Astro v5.18.1"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="BIOS Confessions" href="/rss.xml"><link rel="canonical" href="https://www.biosconfessions.com/posts/hello-world-x86-64-assembly-docker-guide/"><title>x86-64 Assembly Hello World: The Complete Docker-Based Guide | BIOS Confessions</title><meta name="title" content="x86-64 Assembly Hello World: The Complete Docker-Based Guide"><meta name="description" content="Stop fighting environment errors. Learn x86-64 Assembly with a zero-setup Docker environment. Includes NASM code, syscall explanations, and a one-click build script."><meta name="keywords" content="x86_64 assembly docker tutorial, how to run assembly on apple silicon mac, nasm x86_64 linux syscalls example, setup assembly dev environment fast, assembly programming without installing nasm, dockerize assembly language development, nasm elf64 hello world tutorial, nasm x86-64 linux hello world example, hello world in x86-64 assembly nasm linux"><meta property="og:title" content="x86-64 Assembly Hello World: The Complete Docker-Based Guide"><meta property="og:description" content="Stop fighting environment errors. Learn x86-64 Assembly with a zero-setup Docker environment. Includes NASM code, syscall explanations, and a one-click build script."><meta property="og:image" content="https://www.biosconfessions.com/assets/whale-behind-a-desk-with-containers.DX4KWUkX.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://www.biosconfessions.com/posts/hello-world-x86-64-assembly-docker-guide/"><meta property="og:type" content="article"><meta property="og:site_name" content="BIOS Confessions"><meta property="twitter:title" content="x86-64 Assembly Hello World: The Complete Docker-Based Guide"><meta property="twitter:description" content="Stop fighting environment errors. Learn x86-64 Assembly with a zero-setup Docker environment. Includes NASM code, syscall explanations, and a one-click build script."><meta property="twitter:image" content="https://www.biosconfessions.com/assets/whale-behind-a-desk-with-containers.DX4KWUkX.png"><meta property="twitter:url" content="https://www.biosconfessions.com/posts/hello-world-x86-64-assembly-docker-guide/"><meta property="twitter:card" content="summary_large_image"><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-E96HPDSNG8"></script><script type="text/partytown">(function(){const gTag = "G-E96HPDSNG8";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied'
+            });
+            gtag('config', gTag);
+        })();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"BIOS Confessions","url":"https://www.biosconfessions.com"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.biosconfessions.com"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://www.biosconfessions.com/posts"},{"@type":"ListItem","position":3,"name":"Hello world x86 64 assembly docker guide","item":"https://www.biosconfessions.com/posts/hello-world-x86-64-assembly-docker-guide"}]}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"x86-64 Assembly Hello World: The Complete Docker-Based Guide","description":"Stop fighting environment errors. Learn x86-64 Assembly with a zero-setup Docker environment. Includes NASM code, syscall explanations, and a one-click build script.","image":"https://www.biosconfessions.com/assets/whale-behind-a-desk-with-containers.DX4KWUkX.png","proficiencyLevel":"Beginner","articleSection":["Programming"],"author":{"@type":"Person","name":"Gianni","jobTitle":"Software Engineer","url":"https://www.biosconfessions.com/about#gianni","sameAs":["https://github.com/gianni1998"],"worksFor":{"@type":"Organization","name":"BIOS Confessions"}},"datePublished":"2025-10-19T00:00:00.000Z","dateModified":"2026-03-29T00:00:00.000Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.biosconfessions.com/posts/hello-world-x86-64-assembly-docker-guide/"},"publisher":{"@type":"Organization","@id":"https://www.biosconfessions.com/about","name":"BIOS Confessions","logo":{"@type":"ImageObject","url":"https://www.biosconfessions.com/logo.svg"}},"keywords":"x86_64 assembly docker tutorial, how to run assembly on apple silicon mac, nasm x86_64 linux syscalls example, setup assembly dev environment fast, assembly programming without installing nasm, dockerize assembly language development, nasm elf64 hello world tutorial, nasm x86-64 linux hello world example, hello world in x86-64 assembly nasm linux","inLanguage":"en-US"}</script><link rel="stylesheet" href="/assets/_slug_.DJ5tu4Ac.css">
+<link rel="stylesheet" href="/assets/_slug_.C5IuhOBj.css"><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/assets/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body>  <header class="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/70 backdrop-blur-xl"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="flex items-center justify-between py-4"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-all group-hover:rotate-6 group-hover:bg-blue-600">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600 italic">Confessions</span> </span> </a> <nav class="hidden items-center gap-10 text-[13px] font-bold tracking-widest text-gray-500 uppercase md:flex"> <a href="/posts/" class="transition-colors hover:text-blue-600">Articles</a> <a href="/about/" class="transition-colors hover:text-blue-600">About</a> <a href="/search/" class="transition-colors hover:text-blue-600"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="size-4" data-slot="icon" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path> </svg> </a> <div class="h-4 w-px bg-gray-200"></div> <a href="/posts/" class="relative inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-2.5 text-white transition-all hover:bg-blue-600 hover:ring-4 hover:ring-blue-100"> <span class="relative">Read Now</span> <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path> </svg> </a> </nav> <button id="menu-toggle" class="group relative h-10 w-10 rounded-xl border border-gray-100 bg-white p-2 transition-colors hover:bg-gray-50 md:hidden" aria-label="Toggle Menu"> <div class="flex flex-col gap-1.5 transition-all group-active:scale-95"> <span id="line-1" class="h-0.5 w-6 rounded-full bg-gray-900 transition-all"></span> <span id="line-2" class="h-0.5 w-6 rounded-full bg-blue-600 transition-all"></span> </div> </button> </div>  </div> <div id="mobile-menu" class="hidden overflow-hidden border-t border-gray-100 bg-white/95 backdrop-blur-md md:hidden"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <nav class="flex flex-col gap-6 py-10 text-xs font-bold tracking-[0.2em] text-gray-400 uppercase"> <a href="/posts" class="flex items-center justify-between text-gray-900">
+Articles <span class="text-blue-600">01</span> </a> <a href="/about" class="flex items-center justify-between text-gray-900">
+About <span class="text-blue-600">02</span> </a> <a href="/search" class="flex items-center justify-between text-gray-900">
+Search <span class="text-blue-600">03</span> </a> </nav>  </div> </div> </header> <script type="module">const l=document.getElementById("menu-toggle"),e=document.getElementById("mobile-menu"),t=document.getElementById("line-1"),n=document.getElementById("line-2");l?.addEventListener("click",()=>{const s=!e?.classList.contains("hidden");e?.classList.toggle("hidden"),s?(t?.classList.remove("translate-y-1","rotate-45"),n?.classList.remove("-translate-y-1","-rotate-45")):(t?.classList.add("translate-y-1","rotate-45"),n?.classList.add("-translate-y-1","-rotate-45"))});</script> <main id="main" role="main">  <div id="progress-bar" class="fixed top-0 left-0 z-100 h-1 bg-blue-600 transition-all duration-150" style="width: 0%"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <article class="relative mb-20 min-h-screen"> <div class="grid grid-cols-1 gap-12 pt-16 lg:grid-cols-12"> <div class="lg:col-span-8 xl:col-span-9"> <header class="mb-12"> <div class="mb-6 flex flex-wrap items-center gap-4 text-sm font-medium"> <div class="flex items-center gap-2 text-blue-600"> <time datetime="2025-10-19T00:00:00.000Z"> Oct 19, 2025 </time> </div> <div class="text-gray-400 italic"> <span>•</span> <span class="ml-2">
+Updated: Mar 29, 2026 </span> </div> <span class="text-gray-300">|</span> <span class="text-gray-500">11 min</span> </div> <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl"> x86-64 Assembly Hello World: The Complete Docker-Based Guide </h1> <p class="mt-6 max-w-2xl text-xl leading-relaxed text-gray-500"> Stop fighting environment errors. Learn x86-64 Assembly with a zero-setup Docker environment. Includes NASM code, syscall explanations, and a one-click build script. </p> <div class="mt-10 overflow-hidden rounded-3xl bg-gray-100 shadow-2xl"> <img src="/assets/whale-behind-a-desk-with-containers.DX4KWUkX_mVLrY.webp" srcset="/assets/whale-behind-a-desk-with-containers.DX4KWUkX_iXaMK.webp 400w, /assets/whale-behind-a-desk-with-containers.DX4KWUkX_Z1vx07X.webp 800w, /assets/whale-behind-a-desk-with-containers.DX4KWUkX_mVLrY.webp 1024w" alt="Whale behind a desk with containers" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px" loading="eager" fetchpriority="high" decoding="sync" width="1024" height="1024" class="aspect-video w-full object-cover transition-transform duration-500 hover:scale-102"> </div> </header> <main class="prose prose-blue prose-lg prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-img:rounded-3xl prose-headings:scroll-mt-24 w-full max-w-none"> <p>We’ve all seen the classic <em>“Hello, World!”</em> programs. But let’s be honest, you’re not a true Giga Chad until you’ve written one in <strong>pure assembly</strong>.</p>
+<h2 id="why-learn-assembly-in-2026">Why Learn Assembly in 2026?</h2>
+<p>You might be asking yourself: <em>Why on earth would anyone learn assembly when high-level languages exist to make life easier?</em> The truth is, there are situations outside of programming a <a href="https://science.nasa.gov/mission/voyager/frequently-asked-questions/">space probe</a> where assembly is still relevant. For example, imagine you’re working on a collision detection system for a self-driving car. In that scenario, every microsecond matters. You want to squeeze out every drop of performance to avoid disaster. Of course, this doesn’t mean writing the entire system in assembly. In practice, you’d only optimise the performance-critical parts, while leaving the rest in a higher-level language. And knowing how things work under the hood is always valuable</p>
+<h2 id="environment">Environment</h2>
+<p>Before we start coding, we need to set up a proper environment. Let’s create a project directory. Throughout this tutorial, we’ll call it <code>hello-world-asm</code>. To make sure our code runs anywhere (not just on my machine), we’ll use a Docker container with all the necessary tools for building and running assembly. If you don’t already have <a href="https://www.docker.com/products/docker-desktop/">Docker Desktop</a> installed, go ahead and do that first. For your editor/IDE, feel free to use whatever you like; it doesn’t really matter. In this tutorial, I’ll be using <a href="https://code.visualstudio.com/Download">Visual Studio Code</a>, but it’s not a requirement.</p>
+<h3 id="setting-up-the-docker-assembly-environment">Setting up the Docker Assembly Environment</h3>
+<p>Inside your <code>hello-world-asm</code> directory, create a file named <code>Dockerfile</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="docker"><code><span class="line"><span style="color:#F97583">FROM</span><span style="color:#E1E4E8"> ubuntu:latest</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Build-time variable for noninteractive installs</span></span>
+<span class="line"><span style="color:#F97583">ARG</span><span style="color:#E1E4E8"> DEBIAN_FRONTEND=noninteractive</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Install only the essentials for x86_64 assembly</span></span>
+<span class="line"><span style="color:#F97583">RUN</span><span style="color:#E1E4E8"> apt update &amp;&amp; apt upgrade -y &amp;&amp; \</span></span>
+<span class="line"><span style="color:#E1E4E8">    apt install -y --no-install-recommends \</span></span>
+<span class="line"><span style="color:#E1E4E8">    build-essential \</span></span>
+<span class="line"><span style="color:#E1E4E8">    gdb \</span></span>
+<span class="line"><span style="color:#E1E4E8">    nasm &amp;&amp; \</span></span>
+<span class="line"><span style="color:#E1E4E8">    rm -rf /var/lib/apt/lists/*</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Create non-root user &quot;dev&quot;</span></span>
+<span class="line"><span style="color:#F97583">RUN</span><span style="color:#E1E4E8"> useradd -m -s /bin/bash dev &amp;&amp; \</span></span>
+<span class="line"><span style="color:#E1E4E8">    echo </span><span style="color:#9ECBFF">&quot;dev ALL=(ALL) NOPASSWD: ALL&quot;</span><span style="color:#E1E4E8"> &gt;&gt; /etc/sudoers</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">USER</span><span style="color:#E1E4E8"> dev</span></span>
+<span class="line"><span style="color:#F97583">WORKDIR</span><span style="color:#E1E4E8"> /home/dev</span></span></code></pre>
+<p>Let’s break down what we just set up:</p>
+<ul>
+<li><strong>Base image:</strong> We start with <code>ubuntu:latest</code>, giving us a clean Linux environment.</li>
+<li><strong>Non-interactive installs:</strong> The <code>DEBIAN_FRONTEND=noninteractive</code> variable ensures <code>apt</code> doesn’t get stuck asking us questions.</li>
+<li><strong>Install essentials:</strong> We pull in just the tools we need for x86_64 assembly programming:
+<ul>
+<li><code>build-essential</code> → compiler, linker, common build tools (handy for your C/C++ projects too)</li>
+<li><code>gdb</code> → the GNU Debugger, so we can step through our assembly code.</li>
+<li><code>nasm</code> → the Netwide Assembler, the tool we use to assemble and link our <code>.asm</code> files.</li>
+</ul>
+</li>
+<li><strong>Non-root user:</strong> We add a new user <code>dev</code>, so we don’t run everything as root (a good security practice).</li>
+<li><strong>Working directory:</strong> Finally, we set the container to drop us into <code>/home/dev</code>, which is where we’ll link our project directory to later.</li>
+</ul>
+<h3 id="helper-script">Helper Script</h3>
+<p>Typing Docker commands over and over can be a pain. To make life easier, let’s create a shell script to automate container management. Inside your <code>hello-world-asm</code> directory, create a file named <code>docker.sh</code> with the following content:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D">#!/bin/bash</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">IMAGE_NAME</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">&quot;dev-env&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">CONTAINER_NAME</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">&quot;dev-env-container&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">CONTAINER_ENTRY</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">&quot;/usr/bin/bash&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">WORK_DIR</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">&quot;/home/dev/hello-world-asm&quot;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">PROJECT_ROOT</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">&quot;$(</span><span style="color:#79B8FF">pwd</span><span style="color:#9ECBFF">)&quot;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> container_stop</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">	sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> stop</span><span style="color:#E1E4E8"> $CONTAINER_NAME </span><span style="color:#F97583">||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> &quot;container already stopped&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> clean</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">	container_stop</span></span>
+<span class="line"><span style="color:#B392F0">	sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> rm</span><span style="color:#E1E4E8"> $CONTAINER_NAME </span><span style="color:#F97583">||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> &quot;container already removed&quot;</span></span>
+<span class="line"><span style="color:#B392F0">	sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> image</span><span style="color:#9ECBFF"> rm</span><span style="color:#E1E4E8"> $IMAGE_NAME  </span><span style="color:#F97583">||</span><span style="color:#79B8FF"> echo</span><span style="color:#9ECBFF"> &quot;image already removed&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> container_start</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">	if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-z</span><span style="color:#9ECBFF"> &quot;$(</span><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> docker ps </span><span style="color:#79B8FF">-a</span><span style="color:#F97583"> |</span><span style="color:#B392F0"> grep</span><span style="color:#E1E4E8"> $CONTAINER_NAME</span><span style="color:#9ECBFF">)&quot;</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">		echo</span><span style="color:#9ECBFF"> &quot;&gt;&gt; creating dev container&quot;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">		sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> -w</span><span style="color:#E1E4E8"> $WORK_DIR </span><span style="color:#79B8FF">--hostname</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> -it</span><span style="color:#79B8FF"> --name</span><span style="color:#E1E4E8"> $CONTAINER_NAME </span><span style="color:#79B8FF">\</span></span>
+<span class="line"><span style="color:#79B8FF">			--net=host</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">			--cap-add=SYS_PTRACE</span><span style="color:#79B8FF"> --security-opt</span><span style="color:#9ECBFF"> seccomp=unconfined</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">			-v</span><span style="color:#E1E4E8"> $PROJECT_ROOT</span><span style="color:#9ECBFF">:</span><span style="color:#E1E4E8">$WORK_DIR</span><span style="color:#9ECBFF">:z</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#E1E4E8">			$IMAGE_NAME $CONTAINER_ENTRY</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	else</span></span>
+<span class="line"><span style="color:#79B8FF">		echo</span><span style="color:#9ECBFF"> &quot;&gt;&gt; found existing dev container&quot;</span></span>
+<span class="line"><span style="color:#B392F0">		sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> start</span><span style="color:#E1E4E8"> $CONTAINER_NAME</span></span>
+<span class="line"><span style="color:#B392F0">		sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> exec</span><span style="color:#79B8FF"> -it</span><span style="color:#E1E4E8"> $CONTAINER_NAME $CONTAINER_ENTRY</span></span>
+<span class="line"><span style="color:#F97583">	fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> image_build</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">	if</span><span style="color:#E1E4E8"> [ </span><span style="color:#F97583">-z</span><span style="color:#9ECBFF"> &quot;$(</span><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> docker images </span><span style="color:#F97583">|</span><span style="color:#B392F0"> grep</span><span style="color:#E1E4E8"> $IMAGE_NAME</span><span style="color:#9ECBFF">)&quot;</span><span style="color:#E1E4E8"> ]; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">		echo</span><span style="color:#9ECBFF"> &quot;&gt;&gt; building image: </span><span style="color:#E1E4E8">$IMAGE_NAME</span><span style="color:#9ECBFF">&quot;</span></span>
+<span class="line"><span style="color:#B392F0">		sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -t</span><span style="color:#E1E4E8"> $IMAGE_NAME </span><span style="color:#9ECBFF">./</span></span>
+<span class="line"><span style="color:#F97583">	fi</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> print_usage</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#79B8FF">	echo</span><span style="color:#9ECBFF"> &quot;Usage: ./docker.sh [container-start | container-stop | image-build | clean]&quot;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">	if</span><span style="color:#F97583"> !</span><span style="color:#79B8FF"> command</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> docker</span><span style="color:#F97583"> &gt;</span><span style="color:#9ECBFF">/dev/null</span><span style="color:#F97583"> 2&gt;&amp;1</span><span style="color:#E1E4E8">; </span><span style="color:#F97583">then</span></span>
+<span class="line"><span style="color:#79B8FF">		echo</span><span style="color:#9ECBFF"> &quot;Could not find docker. Please install it https://docs.docker.com/engine/install/&quot;</span></span>
+<span class="line"><span style="color:#79B8FF">		exit</span><span style="color:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#F97583">	fi</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">	case</span><span style="color:#9ECBFF"> &quot;</span><span style="color:#79B8FF">$1</span><span style="color:#9ECBFF">&quot;</span><span style="color:#F97583"> in</span></span>
+<span class="line"><span style="color:#DBEDFF">	  container-start</span><span style="color:#F97583">)</span><span style="color:#B392F0"> container_start</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">	  container-stop</span><span style="color:#F97583">)</span><span style="color:#B392F0">  container_stop</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">	  image-build</span><span style="color:#F97583">)</span><span style="color:#B392F0">     image_build</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#DBEDFF">	  clean</span><span style="color:#F97583">)</span><span style="color:#B392F0">           clean</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#F97583">	  *)</span><span style="color:#B392F0">               print_usage</span><span style="color:#E1E4E8"> ;;</span></span>
+<span class="line"><span style="color:#F97583">	esac</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">main</span><span style="color:#FFAB70"> $@</span></span></code></pre>
+<p>What this script does:</p>
+<ul>
+<li><strong><code>image-build</code></strong> Builds our Docker image from the <code>Dockerfile</code>.</li>
+<li><strong><code>container-start</code></strong> Starts a new container (or reuses an existing one) and drops you into a shell.</li>
+<li><strong><code>container-stop</code></strong> Stops the running container.</li>
+<li><strong><code>clean</code></strong> Removes the container and image, so you can start fresh.</li>
+</ul>
+<p>In short, it hides the long Docker commands and gives you a simple interface.</p>
+<h3 id="apple-silicon-m-chips">Apple Silicon (M-Chips)</h3>
+<p>If you’re on a Mac with Apple Silicon, your CPU is ARM64, but this tutorial targets x86_64 assembly. That means we must run our container using x86_64 emulation.</p>
+<p>If you don’t do this, Docker may build the image for ARM, and the assembler/linker output won’t run correctly.</p>
+<p>Build the image using the x86 platform:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --platform</span><span style="color:#9ECBFF"> linux/amd64</span><span style="color:#79B8FF"> -t</span><span style="color:#9ECBFF"> dev-env</span><span style="color:#9ECBFF"> .</span></span></code></pre>
+<p>If you’re using the helper script, update the build command in <code>docker.sh</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> --platform</span><span style="color:#9ECBFF"> linux/amd64</span><span style="color:#79B8FF"> -t</span><span style="color:#E1E4E8"> $IMAGE_NAME </span><span style="color:#9ECBFF">./</span></span></code></pre>
+<p>Also update the container run command. Inside <code>container_start()</code>, change the docker run line to:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sudo</span><span style="color:#9ECBFF"> docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> --platform</span><span style="color:#9ECBFF"> linux/amd64</span><span style="color:#79B8FF"> -w</span><span style="color:#E1E4E8"> $WORK_DIR </span><span style="color:#79B8FF">--hostname</span><span style="color:#9ECBFF"> dev</span><span style="color:#79B8FF"> -it</span><span style="color:#79B8FF"> --name</span><span style="color:#E1E4E8"> $CONTAINER_NAME </span><span style="color:#79B8FF">\</span></span></code></pre>
+<h3 id="first-run">First Run</h3>
+<p>Before we can use our container, we need to build the image. In your terminal (for Windows users, PowerShell works best), run:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sh</span><span style="color:#9ECBFF"> docker.sh</span><span style="color:#9ECBFF"> image-build</span><span style="color:#6A737D">   # Linux/macOS</span></span>
+<span class="line"><span style="color:#B392F0">bash</span><span style="color:#9ECBFF"> docker.sh</span><span style="color:#9ECBFF"> image-build</span><span style="color:#6A737D"> # Windows (PowerShell)</span></span></code></pre>
+<p>Then start the container with:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">sh</span><span style="color:#9ECBFF"> docker.sh</span><span style="color:#9ECBFF"> container-start</span><span style="color:#6A737D">   # Linux/macOS</span></span>
+<span class="line"><span style="color:#B392F0">bash</span><span style="color:#9ECBFF"> docker.sh</span><span style="color:#9ECBFF"> container-start</span><span style="color:#6A737D"> # Windows (PowerShell)</span></span></code></pre>
+<p>This will provide you with terminal access within your development environment. From here, we’re ready to write some assembly.</p>
+<h2 id="assembly-file-structure">Assembly File Structure</h2>
+<p>Before we dive into coding, it’s important to understand how an assembly file is usually organized. Most assembly programs are divided into <strong>sections</strong>, each with a specific purpose. The exact details vary depending on the assembler and platform, but the structure is broadly similar everywhere.</p>
+<p>Here are the most common sections:</p>
+<ul>
+<li><strong><code>.data</code></strong> Holds variables and constants that are <strong>initialised</strong> when the program starts. For example, your “Hello, World!” string belongs here.</li>
+<li><strong><code>.bss</code></strong> Holds <strong>uninitialised variables</strong> (they start as zero by default). Think of this as a workspace where you can reserve space for data you’ll fill in later.</li>
+<li><strong><code>.text</code></strong> Contains the actual <strong>instructions</strong> of the program. This is where the CPU starts executing. The program’s entry point (often called <code>_start</code> on Linux or <code>main</code> in higher-level conventions) is defined in this section.</li>
+</ul>
+<p>A Simple Mental Model:</p>
+<ul>
+<li><code>.data</code> → “What I already know.”</li>
+<li><code>.bss</code> → “What I’ll figure out later.”</li>
+<li><code>.text</code> → “What I need to do.”</li>
+</ul>
+<p>For our <em>Hello, World!</em> program, we only need two sections:</p>
+<ul>
+<li><code>.data</code> to store the message</li>
+<li><code>.text</code> to hold the instructions that display it</li>
+</ul>
+<h2 id="writing-our-first-assembly-program">Writing Our First Assembly Program</h2>
+<p>Let’s start building our first program! Inside your project directory, create a new file named <code>hello.asm</code>.</p>
+<p>The first step is to set up the sections of our program. As we learned earlier, we’ll need:</p>
+<ul>
+<li>a <strong><code>.data</code></strong> section for our message</li>
+<li>a <strong><code>.text</code></strong> section for the instructions that display it.</li>
+</ul>
+<p>We can declare these sections with the <code>section</code> keyword:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#B392F0">section .data</span><span style="color:#6A737D">                           ; Create the data section</span></span>
+<span class="line"><span style="color:#B392F0">section .text</span><span style="color:#6A737D">                           ; Create the text section</span></span></code></pre>
+<h3 id="adding-data">Adding Data</h3>
+<p>Our program needs just two pieces of data:</p>
+<ol>
+<li>the <strong>message</strong> we want to print, and</li>
+<li>the <strong>length</strong> of that message.</li>
+</ol>
+<p>Because this program is simple, we don’t need any dynamic memory management. We can store everything directly in the <code>.data</code> section. To define the message, we’ll use the assembler directive <code>db</code> (<em>define byte</em>). This instructs the assembler to allocate memory space and fill it with the values we provide. In this case, that’s the string <code>&quot;Hello, World!&quot;</code> followed by <code>0x0A</code>, which represents the newline character (<code>&#39;\n&#39;</code>).</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"></span>
+<span class="line"><span style="color:#B392F0">section .data</span><span style="color:#6A737D">                           ; Create the data section</span></span>
+<span class="line"><span style="color:#E1E4E8">    msg     </span><span style="color:#F97583">db</span><span style="color:#E1E4E8">  &quot;Hello, World!&quot;, </span><span style="color:#79B8FF">0x0A</span><span style="color:#6A737D">   ; Our message plus a newline (0x0A = &#39;\n&#39;)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">section .text</span><span style="color:#6A737D">                           ; Create the text section</span></span></code></pre>
+<p>Now we also need the <strong>length of the message</strong>. We can compute it automatically using the <code>equ</code> directive (<em>equate</em>). Unlike <code>db</code>, <code>equ</code> does not allocate memory. Instead, it defines a constant value that the assembler substitutes wherever the label is used. To get the length, we subtract the address of the beginning of the message (<code>msg</code>) from the current location counter (<code>$</code>). The symbol <code>$</code> always refers to the assembler’s current position, which in this case is right after the message we just defined.</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#B392F0">section .data</span><span style="color:#6A737D">                           ; Create the data section</span></span>
+<span class="line"><span style="color:#E1E4E8">    msg     </span><span style="color:#F97583">db</span><span style="color:#E1E4E8">  &quot;Hello, World!&quot;, </span><span style="color:#79B8FF">0x0A</span><span style="color:#6A737D">   ; Our message plus a newline (0x0A = &#39;\n&#39;)</span></span>
+<span class="line"><span style="color:#E1E4E8">    len     </span><span style="color:#79B8FF">equ</span><span style="color:#E1E4E8"> $ - msg                 </span><span style="color:#6A737D">; Define a constant len with the message length</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">section .text</span><span style="color:#6A737D">                           ; Create the text section</span></span></code></pre>
+<h3 id="x86-64-system-calls-printing-to-the-terminal">x86-64 System Calls: Printing to the Terminal</h3>
+<p>Now that our data is defined, it’s time to write the actual instructions in the <strong><code>.text</code></strong> section. This is where the CPU will start executing our program. Every program needs an <strong>entry point</strong>, ****a place where execution begins. In Linux assembly, this is usually the label <code>_start</code>. We’ll declare it as a global symbol so the linker knows where to begin:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#B392F0">section .data</span><span style="color:#6A737D">                           ; Create the data section</span></span>
+<span class="line"><span style="color:#E1E4E8">    msg     </span><span style="color:#F97583">db</span><span style="color:#E1E4E8">  &quot;Hello, World!&quot;, </span><span style="color:#79B8FF">0x0A</span><span style="color:#6A737D">   ; Our message plus a newline (0x0A = &#39;\n&#39;)</span></span>
+<span class="line"><span style="color:#E1E4E8">    len     </span><span style="color:#79B8FF">equ</span><span style="color:#E1E4E8"> $ - msg                 </span><span style="color:#6A737D">; Define a constant len with the message length</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">section .text</span><span style="color:#6A737D">                           ; Create the text section</span></span>
+<span class="line"><span style="color:#E1E4E8">    global _start                       </span><span style="color:#6A737D">; Tell the linker the entry point is _start</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">_start:</span><span style="color:#6A737D">                                 ; Entry point of our program</span></span></code></pre>
+<p>To display text on the screen, we need to ask the operating system for help. In Linux, this is done using a <strong>system call</strong>. A system call is like raising your hand and asking the OS: “Hey, can you do this for me?” We’ll use the <code>write</code> system call, which has this signature:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="c"><code><span class="line"><span style="color:#B392F0">write</span><span style="color:#E1E4E8">(fd, buf, count)</span></span></code></pre>
+<ul>
+<li><code>fd</code> = file descriptor (1 means standard output, the terminal).</li>
+<li><code>buf</code> = address of the data to write (our <code>msg</code>).</li>
+<li><code>count</code> = number of bytes to write (our <code>len</code>).</li>
+</ul>
+<p>In x86-64 Linux, <a href="https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/">system calls</a> are made by:</p>
+<ol>
+<li>putting the syscall number into the <code>rax</code> register,</li>
+<li>putting the arguments into registers (<code>rdi</code>, <code>rsi</code>, <code>rdx</code>, …), and</li>
+<li>executing the instruction <code>syscall</code>.</li>
+</ol>
+<p>The syscall number for <code>write</code> is <strong>1</strong>.</p>
+<p>Here’s how we set up and call <code>write</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#F97583">mov</span><span style="color:#79B8FF">     rax</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#6A737D">                      ; Syscall number for write</span></span>
+<span class="line"><span style="color:#F97583">mov</span><span style="color:#79B8FF">     rdi</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#6A737D">                      ; File descriptor 1 = stdout</span></span>
+<span class="line"><span style="color:#F97583">mov</span><span style="color:#79B8FF">     rsi</span><span style="color:#E1E4E8">, msg                    </span><span style="color:#6A737D">; Address of the string</span></span>
+<span class="line"><span style="color:#F97583">mov</span><span style="color:#79B8FF">     rdx</span><span style="color:#E1E4E8">, len                    </span><span style="color:#6A737D">; Length of the string</span></span>
+<span class="line"><span style="color:#F97583">syscall</span><span style="color:#6A737D">                             ; Invoke the system call</span></span></code></pre>
+<p>After printing the message, the program still needs to exit cleanly. That’s another syscall: <code>exit</code>.</p>
+<ul>
+<li>The syscall number for <code>exit</code> is <strong>60</strong>.</li>
+<li>Its only argument is the exit code (0 means success).</li>
+</ul>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#F97583">mov</span><span style="color:#79B8FF">     rax</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">60</span><span style="color:#6A737D">                     ; syscall number for exit</span></span>
+<span class="line"><span style="color:#F97583">xor</span><span style="color:#79B8FF">     rdi</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">rdi</span><span style="color:#6A737D">                    ; exit code 0 (using xor to set rdi = 0)</span></span>
+<span class="line"><span style="color:#F97583">syscall</span><span style="color:#6A737D">                             ; Invoke the system call</span></span></code></pre>
+<p>Here’s the full <code>hello.asm</code> so far:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="asm"><code><span class="line"><span style="color:#B392F0">section .data</span><span style="color:#6A737D">                           ; Create the data section</span></span>
+<span class="line"><span style="color:#E1E4E8">    msg     </span><span style="color:#F97583">db</span><span style="color:#E1E4E8">  &quot;Hello, World!&quot;, </span><span style="color:#79B8FF">0x0A</span><span style="color:#6A737D">   ; Our message plus a newline (0x0A = &#39;\n&#39;)</span></span>
+<span class="line"><span style="color:#E1E4E8">    len     </span><span style="color:#79B8FF">equ</span><span style="color:#E1E4E8"> $ - msg                 </span><span style="color:#6A737D">; Define a constant len with the message length</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">section .text</span><span style="color:#6A737D">                           ; Create the text section</span></span>
+<span class="line"><span style="color:#E1E4E8">    global _start                       </span><span style="color:#6A737D">; Tell the linker the entry point is _start</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">_start:</span><span style="color:#6A737D">                                 ; Entry point of our program</span></span>
+<span class="line"><span style="color:#6A737D">    ; write(fd1, msg, len)</span></span>
+<span class="line"><span style="color:#F97583">    mov</span><span style="color:#79B8FF">     rax</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#6A737D">                      ; Syscall number for write</span></span>
+<span class="line"><span style="color:#F97583">    mov</span><span style="color:#79B8FF">     rdi</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1</span><span style="color:#6A737D">                      ; File descriptor 1 = stdout</span></span>
+<span class="line"><span style="color:#F97583">    mov</span><span style="color:#79B8FF">     rsi</span><span style="color:#E1E4E8">, msg                    </span><span style="color:#6A737D">; Address of the string</span></span>
+<span class="line"><span style="color:#F97583">    mov</span><span style="color:#79B8FF">     rdx</span><span style="color:#E1E4E8">, len                    </span><span style="color:#6A737D">; Length of the string</span></span>
+<span class="line"><span style="color:#F97583">    syscall</span><span style="color:#6A737D">                             ; Invoke the system call</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">    ; exit(0)</span></span>
+<span class="line"><span style="color:#F97583">    mov</span><span style="color:#79B8FF">     rax</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">60</span><span style="color:#6A737D">                     ; syscall number for exit</span></span>
+<span class="line"><span style="color:#F97583">    xor</span><span style="color:#79B8FF">     rdi</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">rdi</span><span style="color:#6A737D">                    ; exit code 0 (using xor to set rdi = 0)</span></span>
+<span class="line"><span style="color:#F97583">    syscall</span><span style="color:#6A737D">                             ; Invoke the system call</span></span></code></pre>
+<h2 id="assembling-linking-and-running">Assembling, Linking, and Running</h2>
+<p>We’ve written our <code>hello.asm</code> file, now it’s time to bring it to life! The process has three steps:</p>
+<ol>
+<li><strong>Assemble:</strong> convert the human-readable assembly into machine code (<code>.o</code> file).</li>
+<li><strong>Link:</strong> package that machine code into a proper executable (<code>hello</code>).</li>
+<li><strong>Run:</strong> execute it and see the magic happen.</li>
+</ol>
+<h3 id="option-0-use-make-recommended">Option 0: Use <code>make</code> (recommended)</h3>
+<p>Since we installed <code>make</code> in our container, we can automate these steps with a <strong>Makefile</strong>. Inside your project folder, create a file named <code>Makefile</code>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="makefile"><code><span class="line"><span style="color:#B392F0">all</span><span style="color:#E1E4E8">: hello</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">hello</span><span style="color:#E1E4E8">: hello.o</span></span>
+<span class="line"><span style="color:#E1E4E8">	ld hello.o -o hello</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">hello.o</span><span style="color:#E1E4E8">: hello.asm</span></span>
+<span class="line"><span style="color:#E1E4E8">	nasm -f elf64 hello.asm -o hello.o</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">clean</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">	rm -f hello hello.o</span></span></code></pre>
+<p>Now you can build your program with a single command:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">make</span></span></code></pre>
+<p>And when you want to clean up all build artefacts:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">make</span><span style="color:#9ECBFF"> clean</span></span>
+<span class="line"></span></code></pre>
+<h3 id="step-1-assemble">Step 1: Assemble</h3>
+<p>Manually, the first step is turning your source code into an <strong>object file</strong>:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">nasm</span><span style="color:#79B8FF"> -f</span><span style="color:#9ECBFF"> elf64</span><span style="color:#9ECBFF"> hello.asm</span><span style="color:#79B8FF"> -o</span><span style="color:#9ECBFF"> hello.o</span></span></code></pre>
+<ul>
+<li><code>f elf64</code> → tells NASM to generate 64-bit ELF output (Linux’s standard format).</li>
+<li><code>hello.asm</code> → your assembly source file.</li>
+<li><code>o hello.o</code> → output file (<code>.o</code> = object file).</li>
+</ul>
+<h3 id="step-2-link">Step 2: Link</h3>
+<p>Next, we use the GNU linker <code>ld</code> to create an <strong>executable</strong> from the object file:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">ld</span><span style="color:#9ECBFF"> hello.o</span><span style="color:#79B8FF"> -o</span><span style="color:#9ECBFF"> hello</span></span>
+<span class="line"></span></code></pre>
+<ul>
+<li><code>hello.o</code> → the object file we just created.</li>
+<li><code>o hello</code> → the name of the final executable.</li>
+</ul>
+<h3 id="step-3-run">Step 3: Run</h3>
+<p>Now execute your program:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">./hello</span></span></code></pre>
+<p>You should see:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Hello, World!</span></span></code></pre>
+<p>Congratulations, you’ve just written, built, and executed your first <strong>Hello World in pure x86 assembly</strong>!</p> </main>   </div> <aside class="hidden lg:col-span-4 lg:block xl:col-span-3"> <div class="no-scrollbar sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto py-2"> <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"> <h4 class="mb-4 text-xs font-bold tracking-widest text-gray-900 uppercase">
+On this page
+</h4> <nav class="space-y-3 text-sm"> <a href="#why-learn-assembly-in-2026" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Why Learn Assembly in 2026? </a><a href="#environment" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Environment </a><a href="#setting-up-the-docker-assembly-environment" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Setting up the Docker Assembly Environment </a><a href="#helper-script" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Helper Script </a><a href="#apple-silicon-m-chips" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Apple Silicon (M-Chips) </a><a href="#first-run" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> First Run </a><a href="#assembly-file-structure" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Assembly File Structure </a><a href="#writing-our-first-assembly-program" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Writing Our First Assembly Program </a><a href="#adding-data" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Adding Data </a><a href="#x86-64-system-calls-printing-to-the-terminal" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> x86-64 System Calls: Printing to the Terminal </a><a href="#assembling-linking-and-running" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Assembling, Linking, and Running </a><a href="#option-0-use-make-recommended" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Option 0: Use make (recommended) </a><a href="#step-1-assemble" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Step 1: Assemble </a><a href="#step-2-link" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Step 2: Link </a><a href="#step-3-run" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Step 3: Run </a> </nav> </div> </div> </aside> </div> </article>  </div> <script type="module">window.onscroll=()=>{const o=document.body.scrollTop||document.documentElement.scrollTop,n=document.documentElement.scrollHeight-document.documentElement.clientHeight,t=o/n*100,e=document.getElementById("progress-bar");e&&(e.style.width=t+"%")};document.addEventListener("click",o=>{const n=o.target.closest("[data-snippet-trigger]");if(!n)return;const t=n.dataset.snippetTrigger;if(!t)return;const e=document.getElementById(`snippet-output-${t}`);if(e){window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:e.dataset.snippetLabel??t,outputText:(e.textContent??"").trim()}}));return}const s=document.getElementById(`snippet-graph-${t}`);if(s){const i=s.dataset.snippetData??"";let c=null;try{c=JSON.parse(i)}catch{}window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:s.dataset.snippetLabel??t,chartData:c}}))}});</script> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="2fyvh2" component-url="/assets/SnippetModal.AUy3O0zP.js" component-export="default" renderer-url="/assets/client.CTd2fbS1.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;SnippetModal&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island>  </main> <footer class="relative border-t border-gray-100 bg-white pt-24 pb-12"> <div class="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] mask-[linear-gradient(to_bottom,white,transparent)] opacity-40 [bg-size:32px_32px]"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="grid grid-cols-1 gap-12 md:grid-cols-12 lg:gap-24"> <div class="md:col-span-4 lg:col-span-5"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-transform group-hover:rotate-12">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600">Confessions</span> </span> </a> <p class="mt-6 max-w-sm text-sm leading-relaxed font-medium text-gray-500">
+Discover the logic, math, and beauty behind the code, one concept at a time.
+</p> </div> <div class="md:col-span-8 lg:col-span-7"> <div class="grid grid-cols-2 gap-8 sm:grid-cols-3"> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Knowledge
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li><a href="/posts/" class="hover:text-blue-600">Articles</a></li> <li> <a href="/tags/" class="hover:text-blue-600">Tags</a> </li> <li> <a href="/collections/" class="hover:text-blue-600">Series</a> </li> <li> <a href="/search/" class="hover:text-blue-600">Search</a> </li> </ul> </div> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Project
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li> <a href="/about/" class="hover:text-blue-600">The Architects</a> </li> <li><a href="/rss.xml" class="hover:text-blue-600">RSS Stream</a></li> <li><a href="/privacy/" class="hover:text-blue-600">Legal Bits</a></li> <li> <button type="button" data-cc="show-preferencesModal" class="hover:text-blue-600">
+Cookie Settings
+</button> </li> </ul> </div> <div class="col-span-2 sm:col-span-1"> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Status
+</h3> <div class="mt-6 flex flex-col gap-3"> <div class="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-700/10"> <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"></span>
+SYSTEMS OPERATIONAL
+</div> <p class="px-1 font-mono text-[11px] text-gray-400">v4.0.26-stable</p> </div> </div> </div> </div> </div> <div class="mt-20 flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row"> <p class="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+&copy; 2026 BIOS Confessions
+</p> </div>  </div> </footer>  <div id="cc-container"></div> <script type="module" src="/assets/CookieConsent.astro_astro_type_script_index_0_lang.BBRHWC0c.js"></script> </body></html>

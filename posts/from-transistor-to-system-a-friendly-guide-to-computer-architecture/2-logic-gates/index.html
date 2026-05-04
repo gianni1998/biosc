@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.ico"><meta name="generator" content="Astro v5.18.1"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="BIOS Confessions" href="/rss.xml"><link rel="canonical" href="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/"><title>Logic Gates &amp; Memory: Building an 8-Bit Adder from Scratch | BIOS Confessions</title><meta name="title" content="Logic Gates &#38; Memory: Building an 8-Bit Adder from Scratch"><meta name="description" content="Master the building blocks of digital logic. Learn how transistors form AND/OR gates, how Full-Adders perform binary arithmetic, and how Flip-Flops create computer memory."><meta name="keywords" content="how logic gates work with transistors, binary adder circuit tutorial, half adder vs full adder explanation, sequential logic vs combinational logic, SR flip flop memory circuit, building an 8-bit ripple carry adder"><meta property="og:title" content="Logic Gates &#38; Memory: Building an 8-Bit Adder from Scratch"><meta property="og:description" content="Master the building blocks of digital logic. Learn how transistors form AND/OR gates, how Full-Adders perform binary arithmetic, and how Flip-Flops create computer memory."><meta property="og:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/"><meta property="og:type" content="article"><meta property="og:site_name" content="BIOS Confessions"><meta property="twitter:title" content="Logic Gates &#38; Memory: Building an 8-Bit Adder from Scratch"><meta property="twitter:description" content="Master the building blocks of digital logic. Learn how transistors form AND/OR gates, how Full-Adders perform binary arithmetic, and how Flip-Flops create computer memory."><meta property="twitter:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="twitter:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/"><meta property="twitter:card" content="summary_large_image"><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-E96HPDSNG8"></script><script type="text/partytown">(function(){const gTag = "G-E96HPDSNG8";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied'
+            });
+            gtag('config', gTag);
+        })();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"BIOS Confessions","url":"https://www.biosconfessions.com"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.biosconfessions.com"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://www.biosconfessions.com/posts"},{"@type":"ListItem","position":3,"name":"From transistor to system a friendly guide to computer architecture","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture"},{"@type":"ListItem","position":4,"name":"2 logic gates","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates"}]}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Logic Gates & Memory: Building an 8-Bit Adder from Scratch","description":"Master the building blocks of digital logic. Learn how transistors form AND/OR gates, how Full-Adders perform binary arithmetic, and how Flip-Flops create computer memory.","image":"https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png","proficiencyLevel":"Intermediate","articleSection":["Computer Architecture","Electrical Engineering","Logic"],"author":{"@type":"Person","name":"Gianni","jobTitle":"Software Engineer","url":"https://www.biosconfessions.com/about#gianni","sameAs":["https://github.com/gianni1998"],"worksFor":{"@type":"Organization","name":"BIOS Confessions"}},"datePublished":"2025-09-14T00:00:00.000Z","dateModified":"2026-03-29T00:00:00.000Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"From Transistor to System: A Friendly Guide to Computer Architecture","url":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture","position":2},"publisher":{"@type":"Organization","@id":"https://www.biosconfessions.com/about","name":"BIOS Confessions","logo":{"@type":"ImageObject","url":"https://www.biosconfessions.com/logo.svg"}},"keywords":"how logic gates work with transistors, binary adder circuit tutorial, half adder vs full adder explanation, sequential logic vs combinational logic, SR flip flop memory circuit, building an 8-bit ripple carry adder","inLanguage":"en-US"}</script><link rel="stylesheet" href="/assets/_slug_.DJ5tu4Ac.css">
+<link rel="stylesheet" href="/assets/_slug_.C5IuhOBj.css"><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/assets/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body>  <header class="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/70 backdrop-blur-xl"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="flex items-center justify-between py-4"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-all group-hover:rotate-6 group-hover:bg-blue-600">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600 italic">Confessions</span> </span> </a> <nav class="hidden items-center gap-10 text-[13px] font-bold tracking-widest text-gray-500 uppercase md:flex"> <a href="/posts/" class="transition-colors hover:text-blue-600">Articles</a> <a href="/about/" class="transition-colors hover:text-blue-600">About</a> <a href="/search/" class="transition-colors hover:text-blue-600"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="size-4" data-slot="icon" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path> </svg> </a> <div class="h-4 w-px bg-gray-200"></div> <a href="/posts/" class="relative inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-2.5 text-white transition-all hover:bg-blue-600 hover:ring-4 hover:ring-blue-100"> <span class="relative">Read Now</span> <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path> </svg> </a> </nav> <button id="menu-toggle" class="group relative h-10 w-10 rounded-xl border border-gray-100 bg-white p-2 transition-colors hover:bg-gray-50 md:hidden" aria-label="Toggle Menu"> <div class="flex flex-col gap-1.5 transition-all group-active:scale-95"> <span id="line-1" class="h-0.5 w-6 rounded-full bg-gray-900 transition-all"></span> <span id="line-2" class="h-0.5 w-6 rounded-full bg-blue-600 transition-all"></span> </div> </button> </div>  </div> <div id="mobile-menu" class="hidden overflow-hidden border-t border-gray-100 bg-white/95 backdrop-blur-md md:hidden"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <nav class="flex flex-col gap-6 py-10 text-xs font-bold tracking-[0.2em] text-gray-400 uppercase"> <a href="/posts" class="flex items-center justify-between text-gray-900">
+Articles <span class="text-blue-600">01</span> </a> <a href="/about" class="flex items-center justify-between text-gray-900">
+About <span class="text-blue-600">02</span> </a> <a href="/search" class="flex items-center justify-between text-gray-900">
+Search <span class="text-blue-600">03</span> </a> </nav>  </div> </div> </header> <script type="module">const l=document.getElementById("menu-toggle"),e=document.getElementById("mobile-menu"),t=document.getElementById("line-1"),n=document.getElementById("line-2");l?.addEventListener("click",()=>{const s=!e?.classList.contains("hidden");e?.classList.toggle("hidden"),s?(t?.classList.remove("translate-y-1","rotate-45"),n?.classList.remove("-translate-y-1","-rotate-45")):(t?.classList.add("translate-y-1","rotate-45"),n?.classList.add("-translate-y-1","-rotate-45"))});</script> <main id="main" role="main">  <div id="progress-bar" class="fixed top-0 left-0 z-100 h-1 bg-blue-600 transition-all duration-150" style="width: 0%"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <article class="relative mb-20 min-h-screen"> <div class="grid grid-cols-1 gap-12 pt-16 lg:grid-cols-12"> <div class="lg:col-span-8 xl:col-span-9"> <header class="mb-12"> <div class="mb-6 flex flex-wrap items-center gap-4 text-sm font-medium"> <div class="flex items-center gap-2 text-blue-600"> <time datetime="2025-09-14T00:00:00.000Z"> Sep 14, 2025 </time> </div> <div class="text-gray-400 italic"> <span>•</span> <span class="ml-2">
+Updated: Mar 29, 2026 </span> </div> <span class="text-gray-300">|</span> <span class="text-gray-500">9 min</span> </div> <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl"> Logic Gates &amp; Memory: Building an 8-Bit Adder from Scratch </h1> <p class="mt-6 max-w-2xl text-xl leading-relaxed text-gray-500"> Master the building blocks of digital logic. Learn how transistors form AND/OR gates, how Full-Adders perform binary arithmetic, and how Flip-Flops create computer memory. </p> <div class="mt-10 overflow-hidden rounded-3xl bg-gray-100 shadow-2xl"> <img src="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp" srcset="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_2mJ4FS.webp 400w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_Z2i1HwY.webp 800w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp 1024w" alt="Cover image for the blog series &#34;From Transistor to System: A Friendly Guide to Computer Architecture,&#34; showing various computer components in a cheerful, cartoon style" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px" loading="eager" fetchpriority="high" decoding="sync" width="1024" height="1024" class="aspect-video w-full object-cover transition-transform duration-500 hover:scale-102"> </div> </header> <main class="prose prose-blue prose-lg prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-img:rounded-3xl prose-headings:scroll-mt-24 w-full max-w-none"> <p>In this chapter, we’ll see how simple switches can be combined into <strong>logic gates</strong>, the fundamental building blocks of digital circuits. Step by step, we’ll explore the basic gates: <strong>NOT, AND, OR</strong>, and a few useful variations. Then we move on to how they can be wired together into larger circuits, known as <strong>combinational logic</strong>. Along the way, we’ll build our first arithmetic circuits: starting with the <strong>Half-Adder</strong>, then extending it into a <strong>Full-Adder</strong>, and finally chaining them together to create an <strong>8-bit adder</strong>, capable of adding entire binary numbers. Finally, we’ll wrap up with an introduction to <strong>sequential logic</strong>, where circuits gain memory and can remember past states.</p>
+<h2 id="from-switches-to-logic-gates">From switches to logic gates</h2>
+<p>As we saw in the previous chapter, a transistor at its core acts like an electronic switch: it either allows current to flow (on) or prevents it from flowing (off). In the simple circuit shown below, an AA battery provides the power, the LED indicates the on/off states, a transistor controls the electric flow, and the resistors limit the current to protect the transistor and LED from damaging or even exploding (which can happen to the best of us).</p>
+<p><img src="/assets/how-a-simple-switch-works-logic-circuit-animation.Ctp8qnAU_229YUc.webp" alt="Simple battery-powered circuit with a transistor and an LED in serial" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>By looking at the circuit, you will notice that it is just an LED that turns on and off depending on the transistor’s state. It may not look impressive, but here is the idea: by cleverly wiring transistors, we can make them do more than switch a light on/off. We can make them process information. This is where <strong>logic gates</strong> come in. The very first one we’ll explore is the <strong>NOT gate</strong>, followed by the <strong>AND</strong> and <strong>OR</strong> <strong>gates</strong>.</p>
+<h3 id="not-gate">NOT Gate</h3>
+<p>You may wonder: What happens if we change how the LED is connected? Instead of wiring it directly to the transistor’s output path, we place it on the transistor’s collector side (the path to ground). Now something interesting happens: the circuit <strong>flips the signal</strong>. The output becomes the opposite of the input. This is called an <strong>inverter</strong>, or more commonly, a <strong>NOT gate</strong>.</p>
+<p><img src="/assets/how-an-not-gate-works-logic-circuit-animation.DV_pKvWr_Z2nCFLh.webp" alt="Simple battery-powered circuit with a transistor and an LED in parallel" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>When the transistor is <strong>on</strong>, current flows from the battery’s positive side through the resistor and straight to its negative (ground) via the transistor. In this state, the transistor acts almost like a short circuit, providing a low-resistance path for the current to follow. A transistor isn’t a perfect wire, and even when fully on, there is still a tiny “resistance” inside it. This tiny resistance causes a small <a href="https://en.wikipedia.org/wiki/Voltage_drop">voltage drop</a> across the transistor. Most of the battery’s voltage now falls across the first resistor and the transistor. Very little voltage is left for the LED, so it stays off. In digital circuits, this small leftover voltage is still seen as a logical <strong>0 (low)</strong>. When the transistor switches <strong>off</strong>, the path to ground vanishes. Current can now flow through the LED instead. The LED lights up, which we read as a logical <strong>1 (high)</strong>.</p>
+<p>In logic and computer science, outputs for every possible input are often shown in a <strong>truth table</strong>. A truth table lists all input values (true or false) and the corresponding outputs. Below is the truth table for a NOT gate. In math, the output is often labelled as <strong>Y</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Input (A)</strong></th><th><strong>Output (Y)</strong></th></tr></thead><tbody><tr><td>0</td><td>1</td></tr><tr><td>1</td><td>0</td></tr></tbody></table>
+<h3 id="and-gate">AND Gate</h3>
+<p>Of course, we are not limited to using just one transistor. By combining multiple, we can build circuits that only give an output under specific conditions. One of them is the <strong>AND gate</strong>. In the example below, we connect two transistors in series (one after the other) to create an AND gate.
+Current from the source must pass through both transistors before it can reach the output. In other words, the output will be high if and only if both inputs (A and B) are high. If either transistor is off, the path is broken, and no current reaches the output.</p>
+<p><img src="/assets/how-an-and-gate-works-logic-circuit-animation.CnG8qmhq_ZKqVfI.webp" alt="Animation of how an AND gate works" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>Here follows the truth table for the AND gate:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>A</strong></th><th><strong>B</strong></th><th><strong>Y</strong></th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>1</td></tr></tbody></table>
+<h3 id="or-gate">OR Gate</h3>
+<p>Now let’s try wiring the transistors in <strong>parallel</strong> instead of in series. This gives us the <strong>OR gate</strong>. In this case, the current only needs one path or the other to reach the output to make it high, hence the name OR.</p>
+<p><img src="/assets/how-an-or-gate-works-logic-circuit-animation.CWKjI4Pm_1DXbMW.webp" alt="Animation of how an OR gate works" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>Here is the truth table for the OR gate:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>A</strong></th><th><strong>B</strong></th><th><strong>Y</strong></th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>1</td></tr></tbody></table>
+<h3 id="xor-gate">XOR Gate</h3>
+<p>There is one more gate that deserves special attention, and because we will need it later: the <strong>XOR gate,</strong> short for <strong>exclusive OR</strong>. This gate is like the regular OR gate, but with a twist. As we know from the previous section, with an OR, the output is high if one or both inputs are high. With the XOR, the output is only high if exactly one input is high. This behaviour makes XOR extremely useful, because it can act as a simple difference detector: output is 1 if the inputs are different, and 0 if they’re the same. You’ll see XOR pop up again in circuits that perform arithmetic, like adders.</p>
+<p>Here’s the truth table for XOR:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>A</strong></th><th><strong>B</strong></th><th><strong>Y</strong></th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td></tr></tbody></table>
+<h3 id="nand-and-nor-gate">NAND and NOR Gate</h3>
+<p>By combining the previous gates, we can create even more variations. For example, if we take the output of an AND gate and run it through a NOT gate, we get a <strong>NAND gate</strong> (short for NOT AND). Likewise, combining an OR with a NOT gives a <strong>NOR gate</strong> (NOT OR). NAND and NOR are called <strong>universal gates</strong> because you can combine them to perform any Boolean function and thus create any other type of logic gate (AND, OR, NOT, XOR, XNOR).</p>
+<h2 id="combinational-logic">Combinational Logic</h2>
+<p>So far, we’ve looked at the basic gates: NOT, AND, OR, and a few variations like XOR, NAND, and NOR. Each one flips, combines, or filters signals simply. The real magic begins when we <strong>connect them</strong>. By combining gates, we can create circuits that solve more interesting problems. These are called <strong>combinational logic circuits</strong>. The key feature of combinational logic is that the <strong>output depends only on the current inputs</strong>. These circuits are stateless. They don’t remember what happened before, meaning that if you give the same inputs, you’ll always get the same outputs. With enough combinational logic, we can create circuits that add, subtract, increment, and do much more. In fact, arithmetic operations in a computer all come down to cleverly arranging these simple logic gates.</p>
+<p>To see combinational logic in action, let’s build something practical: a circuit that can add two numbers together, the <strong>Half-Adder</strong>, a simple circuit that can add two binary bits together. Before we dive in, here’s a quick overview of the most common gate symbols:</p>
+<p><img src="/assets/all-logic-gate-symbols.CGQ_RQeV_ZH1Mmi.webp" alt="Overview of the most common gate symbols" loading="lazy" decoding="async" fetchpriority="auto" width="3000" height="1688"></p>
+<p>Okay, let’s start small. Suppose we add two <strong>1-bit numbers</strong>, A and B. The result of this addition has two parts: the <strong>sum</strong> and the <strong>carry</strong>. The sum is the result of the addition, and the carry is like the overflowing bit, indicating that the result is greater than we can hold in the sum. For example:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>A</th><th>B</th><th>Sum</th><th>Carry</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>1</td><td>0</td><td>1</td></tr></tbody></table>
+<p>Here’s the fun part: we can build this exact behaviour using only the gates we’ve already learned! When we look at the table above, we can see that the sum is only 1 when either A or B is 1. This exactly matches the behaviour of an XOR. Now for the carry, it is only 1 when both A and B are 1. This is the behaviour of the AND gate. If we put that together, it will look something like this:</p>
+<p><img src="/assets/how-a-half-adder-works-logic-circuit-animation.DO3kEdh6_TjspT.webp" alt="Animation of how a Half-Adder works" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>This little circuit is our first glimpse at how computers perform arithmetic operations. It’s neat, but it has a limitation: it doesn’t handle a carry input. In real arithmetic, numbers don’t exist in isolation. When adding multi-bit numbers, each column might produce a carry that needs to be added to the next. This is where the bigger brother of the Half-Adders comes into play, the Full-Adder. A Full-Adder extends the Half-Adder by including a <strong>carry-in</strong> bit (C-in). Its outputs are the <strong>sum</strong> and a <strong>carry-out</strong> bit (C-out). How do we build one? Well, it’s surprisingly easy! Here is how it works:</p>
+<ol>
+<li>Take <strong>two Half-Adders</strong>.</li>
+<li>Feed the sum from the first into one input of the second (together with C-in).</li>
+<li>Use an extra <strong>OR gate</strong> to combine the carry outputs from both Half-Adders.</li>
+</ol>
+<p>The result is a Full-Adder!</p>
+<p><img src="/assets/full-adder-logic-circuit.Bjw-Ub4f_1hNhr3.webp" alt="Overview of a Full-Adder circuit" loading="lazy" decoding="async" fetchpriority="auto" width="3000" height="1688"></p>
+<p>Now, here’s where it gets exciting: if we chain multiple Full-Adders together by feeding each carry-out into the next carry-in, we can add multi-bit numbers. For example, connecting 8 Full-Adders creates an <strong>8-bit adder</strong>, capable of adding two 8-bit numbers. The final carry-out then serves as an overflow signal if the result doesn’t fit into 8 bits.</p>
+<p><img src="/assets/8-bit-adder-logic-circuit-animation.GqQqryQr_2kSHb1.webp" alt="Overview of an 8-bit adder circuit" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<h2 id="sequential-logic">Sequential Logic</h2>
+<p>So far, we’ve only looked at combinational logic circuits, circuits whose output only depends on the current inputs. Change an input, and the output changes immediately. A computer needs more than just that. If you write a sentence and your computer instantly forgets the previous letter every time you press a new key, it would not be useful. It also needs <strong>memory</strong>. This is where <strong>sequential logic</strong> comes in. Sequential circuits combine logic gates with feedback loops so that the output doesn’t just depend on the current inputs, but also on the circuit’s <strong>previous state</strong>. In other words, they have memory.</p>
+<p>A simple example of sequential logic in action is a flip-flop, a tiny circuit that can store a single bit of information. The information is stored until a new input changes it. One of the simplest types is the SR flip-flop (Set-Reset flip-flop). It has two inputs:</p>
+<ul>
+<li><strong>S (Set)</strong>: tells the circuit to remember a <code>1</code></li>
+<li><strong>R (Reset)</strong>: tells the circuit to remember a <code>0</code></li>
+</ul>
+<p>And it has the outputs <strong>Q</strong> and <strong>Q′</strong>, which hold the stored value and its inverse.</p>
+<p><img src="/assets/sr-flip-flop-logic-circuit.Bs8phVnq_T5zy5.webp" alt="Overview of an SR Flip-Flop circuit" loading="lazy" decoding="async" fetchpriority="auto" width="3000" height="1688"></p>
+<p>The truth table looks like this:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>S (Set)</strong></th><th><strong>R (Reset)</strong></th><th><strong>Q (next state)</strong></th><th><strong>Q′ (next state)</strong></th><th>Notes</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>No change (holds previous value)</td><td>Opposite of Q</td><td>Memory condition</td></tr><tr><td>0</td><td>1</td><td>0</td><td>1</td><td>Reset state</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>Set state</td></tr><tr><td>1</td><td>1</td><td>Undefined (invalid)</td><td>Undefined (invalid)</td><td>Not allowed</td></tr></tbody></table>
+<p>Notice something new here: when <strong>S = 0</strong> and <strong>R = 0</strong>, the output doesn’t change. The flip-flop remembers whatever it was holding before. That’s memory in action. As you can see, this simple flip-flop has a flaw: the state where both S and R are 1 is undefined. Luckily, engineers have designed improved versions like the JK and D flip-flops that avoid the undefined state, making them more reliable building blocks for memory.</p> </main> <div class="mt-20 grid grid-cols-1 gap-4 border-t border-gray-100 pt-12 sm:grid-cols-2"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/1-transistor/" class="group flex flex-col items-start rounded-2xl border border-gray-100 p-6 transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase"> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path> </svg>
+Previous_Node
+</span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> How Transistors Work: From Semiconductors to MOSFETs </span> </a> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/" class="group flex flex-col items-end rounded-2xl border border-gray-100 p-6 text-right transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+Next_Node
+<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path> </svg> </span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> How an ALU Works: The Heart of CPU Architecture Explained </span> </a> </div> <div class="mt-16 rounded-3xl border border-gray-100 bg-gray-50/50 p-8"> <div class="mb-6 flex items-center justify-between"> <h3 class="text-sm font-bold tracking-widest text-gray-500 uppercase">
+Series:  <span class="text-blue-600">From Transistor to System: A Friendly Guide to Computer Architecture</span> </h3> <span class="text-xs font-medium text-gray-400"> 7 Chapters
+</span> </div> <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/1-transistor/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 1 </span> <span class="text-sm leading-tight font-bold"> Transistor </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 bg-blue-600 text-white shadow-lg ring-2 shadow-blue-200 ring-blue-600 ring-offset-2 "> <span class="mb-1 text-[10px] font-bold uppercase text-blue-100">
+Ch. 2 </span> <span class="text-sm leading-tight font-bold"> Logic </span> <span class="absolute -top-1 -right-1 flex h-3 w-3"> <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span> <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span> </span> </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 3 </span> <span class="text-sm leading-tight font-bold"> ALU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/4-control-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 4 </span> <span class="text-sm leading-tight font-bold"> CU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 5 </span> <span class="text-sm leading-tight font-bold"> Memory </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/6-cpu/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 6 </span> <span class="text-sm leading-tight font-bold"> CPU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/7-beyond/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 7 </span> <span class="text-sm leading-tight font-bold"> Beyond </span>  </a> </div> </div> </div> <aside class="hidden lg:col-span-4 lg:block xl:col-span-3"> <div class="no-scrollbar sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto py-2"> <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"> <h4 class="mb-4 text-xs font-bold tracking-widest text-gray-900 uppercase">
+On this page
+</h4> <nav class="space-y-3 text-sm"> <a href="#from-switches-to-logic-gates" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> From switches to logic gates </a><a href="#not-gate" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> NOT Gate </a><a href="#and-gate" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> AND Gate </a><a href="#or-gate" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> OR Gate </a><a href="#xor-gate" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> XOR Gate </a><a href="#nand-and-nor-gate" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> NAND and NOR Gate </a><a href="#combinational-logic" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Combinational Logic </a><a href="#sequential-logic" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Sequential Logic </a> </nav> </div> </div> </aside> </div> </article>  </div> <script type="module">window.onscroll=()=>{const o=document.body.scrollTop||document.documentElement.scrollTop,n=document.documentElement.scrollHeight-document.documentElement.clientHeight,t=o/n*100,e=document.getElementById("progress-bar");e&&(e.style.width=t+"%")};document.addEventListener("click",o=>{const n=o.target.closest("[data-snippet-trigger]");if(!n)return;const t=n.dataset.snippetTrigger;if(!t)return;const e=document.getElementById(`snippet-output-${t}`);if(e){window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:e.dataset.snippetLabel??t,outputText:(e.textContent??"").trim()}}));return}const s=document.getElementById(`snippet-graph-${t}`);if(s){const i=s.dataset.snippetData??"";let c=null;try{c=JSON.parse(i)}catch{}window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:s.dataset.snippetLabel??t,chartData:c}}))}});</script> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="2fyvh2" component-url="/assets/SnippetModal.AUy3O0zP.js" component-export="default" renderer-url="/assets/client.CTd2fbS1.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;SnippetModal&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island>  </main> <footer class="relative border-t border-gray-100 bg-white pt-24 pb-12"> <div class="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] mask-[linear-gradient(to_bottom,white,transparent)] opacity-40 [bg-size:32px_32px]"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="grid grid-cols-1 gap-12 md:grid-cols-12 lg:gap-24"> <div class="md:col-span-4 lg:col-span-5"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-transform group-hover:rotate-12">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600">Confessions</span> </span> </a> <p class="mt-6 max-w-sm text-sm leading-relaxed font-medium text-gray-500">
+Discover the logic, math, and beauty behind the code, one concept at a time.
+</p> </div> <div class="md:col-span-8 lg:col-span-7"> <div class="grid grid-cols-2 gap-8 sm:grid-cols-3"> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Knowledge
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li><a href="/posts/" class="hover:text-blue-600">Articles</a></li> <li> <a href="/tags/" class="hover:text-blue-600">Tags</a> </li> <li> <a href="/collections/" class="hover:text-blue-600">Series</a> </li> <li> <a href="/search/" class="hover:text-blue-600">Search</a> </li> </ul> </div> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Project
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li> <a href="/about/" class="hover:text-blue-600">The Architects</a> </li> <li><a href="/rss.xml" class="hover:text-blue-600">RSS Stream</a></li> <li><a href="/privacy/" class="hover:text-blue-600">Legal Bits</a></li> <li> <button type="button" data-cc="show-preferencesModal" class="hover:text-blue-600">
+Cookie Settings
+</button> </li> </ul> </div> <div class="col-span-2 sm:col-span-1"> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Status
+</h3> <div class="mt-6 flex flex-col gap-3"> <div class="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-700/10"> <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"></span>
+SYSTEMS OPERATIONAL
+</div> <p class="px-1 font-mono text-[11px] text-gray-400">v4.0.26-stable</p> </div> </div> </div> </div> </div> <div class="mt-20 flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row"> <p class="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+&copy; 2026 BIOS Confessions
+</p> </div>  </div> </footer>  <div id="cc-container"></div> <script type="module" src="/assets/CookieConsent.astro_astro_type_script_index_0_lang.BBRHWC0c.js"></script> </body></html>

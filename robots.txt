@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block Query and Error Nodes
+Disallow: /search
+Disallow: /404
+
+# Host reference to help some older crawlers
+Host: https://www.biosconfessions.com
+
+# Sitemap Reference
+Sitemap: https://www.biosconfessions.com/sitemap-index.xml

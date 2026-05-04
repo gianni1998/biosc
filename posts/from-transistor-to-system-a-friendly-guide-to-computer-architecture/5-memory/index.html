@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.ico"><meta name="generator" content="Astro v5.18.1"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="BIOS Confessions" href="/rss.xml"><link rel="canonical" href="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/"><title>The Memory Hierarchy: From CPU Registers to Long-Term Storage | BIOS Confessions</title><meta name="title" content="The Memory Hierarchy: From CPU Registers to Long-Term Storage"><meta name="description" content="Master the computer memory hierarchy. Learn the critical differences between L1/L2/L3 cache, RAM, and SSDs, plus how the MMU handles virtual-to-physical address translation."><meta name="keywords" content="computer memory hierarchy pyramid, L1 L2 L3 cache differences explained, how the memory management unit mmu works, virtual vs physical address translation, why is cpu cache faster than ram, page fault process step by step"><meta property="og:title" content="The Memory Hierarchy: From CPU Registers to Long-Term Storage"><meta property="og:description" content="Master the computer memory hierarchy. Learn the critical differences between L1/L2/L3 cache, RAM, and SSDs, plus how the MMU handles virtual-to-physical address translation."><meta property="og:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/"><meta property="og:type" content="article"><meta property="og:site_name" content="BIOS Confessions"><meta property="twitter:title" content="The Memory Hierarchy: From CPU Registers to Long-Term Storage"><meta property="twitter:description" content="Master the computer memory hierarchy. Learn the critical differences between L1/L2/L3 cache, RAM, and SSDs, plus how the MMU handles virtual-to-physical address translation."><meta property="twitter:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="twitter:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/"><meta property="twitter:card" content="summary_large_image"><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-E96HPDSNG8"></script><script type="text/partytown">(function(){const gTag = "G-E96HPDSNG8";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied'
+            });
+            gtag('config', gTag);
+        })();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"BIOS Confessions","url":"https://www.biosconfessions.com"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.biosconfessions.com"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://www.biosconfessions.com/posts"},{"@type":"ListItem","position":3,"name":"From transistor to system a friendly guide to computer architecture","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture"},{"@type":"ListItem","position":4,"name":"5 memory","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory"}]}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"The Memory Hierarchy: From CPU Registers to Long-Term Storage","description":"Master the computer memory hierarchy. Learn the critical differences between L1/L2/L3 cache, RAM, and SSDs, plus how the MMU handles virtual-to-physical address translation.","image":"https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png","proficiencyLevel":"Intermediate","articleSection":["Computer Architecture"],"author":{"@type":"Person","name":"Gianni","jobTitle":"Software Engineer","url":"https://www.biosconfessions.com/about#gianni","sameAs":["https://github.com/gianni1998"],"worksFor":{"@type":"Organization","name":"BIOS Confessions"}},"datePublished":"2025-11-30T00:00:00.000Z","dateModified":"2026-04-05T00:00:00.000Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"From Transistor to System: A Friendly Guide to Computer Architecture","url":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture","position":5},"publisher":{"@type":"Organization","@id":"https://www.biosconfessions.com/about","name":"BIOS Confessions","logo":{"@type":"ImageObject","url":"https://www.biosconfessions.com/logo.svg"}},"keywords":"computer memory hierarchy pyramid, L1 L2 L3 cache differences explained, how the memory management unit mmu works, virtual vs physical address translation, why is cpu cache faster than ram, page fault process step by step","inLanguage":"en-US"}</script><link rel="stylesheet" href="/assets/_slug_.DJ5tu4Ac.css">
+<link rel="stylesheet" href="/assets/_slug_.C5IuhOBj.css"><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/assets/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body>  <header class="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/70 backdrop-blur-xl"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="flex items-center justify-between py-4"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-all group-hover:rotate-6 group-hover:bg-blue-600">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600 italic">Confessions</span> </span> </a> <nav class="hidden items-center gap-10 text-[13px] font-bold tracking-widest text-gray-500 uppercase md:flex"> <a href="/posts/" class="transition-colors hover:text-blue-600">Articles</a> <a href="/about/" class="transition-colors hover:text-blue-600">About</a> <a href="/search/" class="transition-colors hover:text-blue-600"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="size-4" data-slot="icon" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path> </svg> </a> <div class="h-4 w-px bg-gray-200"></div> <a href="/posts/" class="relative inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-2.5 text-white transition-all hover:bg-blue-600 hover:ring-4 hover:ring-blue-100"> <span class="relative">Read Now</span> <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path> </svg> </a> </nav> <button id="menu-toggle" class="group relative h-10 w-10 rounded-xl border border-gray-100 bg-white p-2 transition-colors hover:bg-gray-50 md:hidden" aria-label="Toggle Menu"> <div class="flex flex-col gap-1.5 transition-all group-active:scale-95"> <span id="line-1" class="h-0.5 w-6 rounded-full bg-gray-900 transition-all"></span> <span id="line-2" class="h-0.5 w-6 rounded-full bg-blue-600 transition-all"></span> </div> </button> </div>  </div> <div id="mobile-menu" class="hidden overflow-hidden border-t border-gray-100 bg-white/95 backdrop-blur-md md:hidden"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <nav class="flex flex-col gap-6 py-10 text-xs font-bold tracking-[0.2em] text-gray-400 uppercase"> <a href="/posts" class="flex items-center justify-between text-gray-900">
+Articles <span class="text-blue-600">01</span> </a> <a href="/about" class="flex items-center justify-between text-gray-900">
+About <span class="text-blue-600">02</span> </a> <a href="/search" class="flex items-center justify-between text-gray-900">
+Search <span class="text-blue-600">03</span> </a> </nav>  </div> </div> </header> <script type="module">const l=document.getElementById("menu-toggle"),e=document.getElementById("mobile-menu"),t=document.getElementById("line-1"),n=document.getElementById("line-2");l?.addEventListener("click",()=>{const s=!e?.classList.contains("hidden");e?.classList.toggle("hidden"),s?(t?.classList.remove("translate-y-1","rotate-45"),n?.classList.remove("-translate-y-1","-rotate-45")):(t?.classList.add("translate-y-1","rotate-45"),n?.classList.add("-translate-y-1","-rotate-45"))});</script> <main id="main" role="main">  <div id="progress-bar" class="fixed top-0 left-0 z-100 h-1 bg-blue-600 transition-all duration-150" style="width: 0%"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <article class="relative mb-20 min-h-screen"> <div class="grid grid-cols-1 gap-12 pt-16 lg:grid-cols-12"> <div class="lg:col-span-8 xl:col-span-9"> <header class="mb-12"> <div class="mb-6 flex flex-wrap items-center gap-4 text-sm font-medium"> <div class="flex items-center gap-2 text-blue-600"> <time datetime="2025-11-30T00:00:00.000Z"> Nov 30, 2025 </time> </div> <div class="text-gray-400 italic"> <span>•</span> <span class="ml-2">
+Updated: Apr 5, 2026 </span> </div> <span class="text-gray-300">|</span> <span class="text-gray-500">11 min</span> </div> <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl"> The Memory Hierarchy: From CPU Registers to Long-Term Storage </h1> <p class="mt-6 max-w-2xl text-xl leading-relaxed text-gray-500"> Master the computer memory hierarchy. Learn the critical differences between L1/L2/L3 cache, RAM, and SSDs, plus how the MMU handles virtual-to-physical address translation. </p> <div class="mt-10 overflow-hidden rounded-3xl bg-gray-100 shadow-2xl"> <img src="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp" srcset="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_2mJ4FS.webp 400w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_Z2i1HwY.webp 800w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp 1024w" alt="Cover image for the blog series &#34;From Transistor to System: A Friendly Guide to Computer Architecture,&#34; showing various computer components in a cheerful, cartoon style" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px" loading="eager" fetchpriority="high" decoding="sync" width="1024" height="1024" class="aspect-video w-full object-cover transition-transform duration-500 hover:scale-102"> </div> </header> <main class="prose prose-blue prose-lg prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-img:rounded-3xl prose-headings:scroll-mt-24 w-full max-w-none"> <p>In earlier chapters, we have seen how the CPU performs operations and how the Control Unit coordinates them. But a CPU alone can’t do much without a place to keep data and instructions. A running program needs numbers to add, addresses to jump to, and instructions to execute, and all of that must live somewhere, and that is memory. Not all memory is created equal. Different parts of the computer store data at different speeds and capacities, depending on how quickly the CPU needs to access it.</p>
+<h2 id="registers-cache-ram-and-storage">Registers, Cache, RAM, and Storage</h2>
+<p>Computers use several different types of memory and storage. Although all of these hold data, they serve very different roles. You can imagine them as a series of “shelves” at different distances from the CPU.</p>
+<h3 id="registers">Registers</h3>
+<p>Continuing our shelf analogy from earlier, <strong>registers are the shelves closest to the CPU,</strong> so close in fact that they are part of the CPU itself. Registers are tiny, high-speed storage locations used to hold data while instructions are being executed. They store things like ALU inputs, memory addresses, counters, temporary results, and more.</p>
+<p>Registers are extremely small, usually holding between 1 and 8 bytes depending on the CPU architecture. Likewise for the number of registers. Modern CPUs also include special, wider registers (SIMD registers) for processing many values at once, useful for multimedia and scientific computing. When we say a processor is “32-bit” or “64-bit,” we’re usually referring to the size of its <strong>general-purpose registers,</strong> the amount of data it can work with in a single operation.</p>
+<p>Common Register Sizes</p>
+<ul>
+<li><strong>8-bit registers:</strong> Seen in older or simpler CPUs; hold a single byte.</li>
+<li><strong>16-bit registers:</strong> Used in early PCs and many microcontrollers.</li>
+<li><strong>32-bit registers:</strong> Common in older x86 CPUs and ARMv7 processors.</li>
+<li><strong>64-bit registers:</strong> Found in modern x86-64 and ARM64 CPUs; allow larger numbers and bigger memory addresses.</li>
+</ul>
+<p>Common Types of Registers:</p>
+<ul>
+<li><strong>Program Counter (PC) / Instruction Pointer (IP):</strong> Holds the address of the next instruction to fetch.</li>
+<li><strong>Instruction Register (IR):</strong> Stores the instruction currently being decoded or executed.</li>
+<li><strong>Address Registers:</strong> Hold memory addresses used for load/store operations.</li>
+<li><strong>Stack Pointer (SP):</strong> Points to the top of the stack used for function calls and temporary data.</li>
+<li><strong>Data Registers (DR):</strong> Store data loaded from memory or I/O devices.</li>
+<li><strong>Accumulator (ACC):</strong> A special register used for arithmetic; historically very important, still present conceptually.</li>
+<li><strong>General-Purpose Registers (GPRs):</strong> Flexible registers used for calculations and data manipulation (R0, R1, …).</li>
+<li><strong>Status / Flags Register (SR):</strong> Stores condition bits (Zero, Carry, Overflow, etc.) that reflect the result of ALU operations.</li>
+</ul>
+<blockquote>
+<p>See <a href="/posts/hello-world-x86-64-assembly-docker-guide/">x86-64 Assembly Hello World: The Complete Docker-Based Guide</a> if you want to play around with registers yourself.</p>
+</blockquote>
+<h3 id="cache">Cache</h3>
+<p>CPU cache sits just outside the core, but still very close. Cache is a small, extremely fast type of memory that stores data the CPU is likely to need in the near future. Its main purpose is to reduce the time the CPU spends waiting for data from slower main memory (RAM).</p>
+<p>Think of cache as a <strong>“middle shelf”</strong>: not as fast as registers, but much faster than RAM and far larger than the CPU’s limited registers.</p>
+<p>Modern CPUs use several layers of cache:</p>
+<ul>
+<li><strong>L1 Cache</strong>: The smallest and fastest level, located inside each CPU core. Often split into separate instruction and data caches (L1i and L1d).</li>
+<li><strong>L2 Cache</strong>: Larger but slightly slower than L1. Still per-core.</li>
+<li><strong>L3 Cache</strong>: Much larger and slower than L1/L2, commonly shared across all CPU cores.</li>
+</ul>
+<p>The deeper the level, the farther it is from the CPU core, and the slower it gets. However, even the slowest cache is far, <em>far</em> faster than RAM.</p>
+<p>Caches work using the principle of <strong>locality</strong>:</p>
+<ul>
+<li><strong>Temporal locality</strong> – if you use data once, you’ll probably use it again soon.</li>
+<li><strong>Spatial locality</strong> – if you use data at one address, nearby data is likely needed too.</li>
+</ul>
+<p>The CPU automatically loads data into the cache based on these patterns, so the next time it needs that data, it’s already nearby.</p>
+<h3 id="ram-main-memory"><strong>RAM (Main Memory)</strong></h3>
+<p>If registers are the closest shelves and cache is the middle shelf, then <strong>RAM</strong> (Random Access Memory) is the large set of shelves farther away but still within quick reach. RAM stores the data and programs that the CPU is currently working on. It is much larger than cache, typically measured in gigabytes, but also much slower.</p>
+<p>When you open an application, load a file, or run code, the operating system places that data into RAM so the CPU can access it quickly. If data is not in RAM, the CPU would have to fetch it from storage, which is slower.</p>
+<p>RAM has several key characteristics:</p>
+<ul>
+<li><strong>Volatile:</strong> Its contents are lost when the computer powers off.</li>
+<li><strong>Random access:</strong> Any memory location can be accessed directly and in roughly the same amount of time.</li>
+<li><strong>Shared resource:</strong> All programs running on your system compete for space in RAM.</li>
+<li><strong>Bigger but slower:</strong> Tens of nanoseconds (50-100) to access data (compared to the cache’s sub-nanoseconds).</li>
+</ul>
+<p>Because RAM is much slower than cache, the CPU relies heavily on caching to avoid waiting. A cache “miss” forces the CPU to fetch data from RAM, and this delay can hurt performance significantly.</p>
+<p>RAM exists in different forms and technologies:</p>
+<ul>
+<li><strong>DRAM (Dynamic RAM):</strong> The most common type. Needs to be refreshed constantly.</li>
+<li><strong>SDRAM (Synchronous DRAM):</strong> Works in sync with the CPU clock.</li>
+<li><strong>DDR (Double Data Rate SDRAM):</strong> Modern high-speed family of RAM (DDR3, DDR4, DDR5).</li>
+</ul>
+<p>You don’t need to know the hardware details to understand its role: <strong>RAM is the CPU’s working area</strong>, holding the data and code currently in use.</p>
+<h3 id="storage-hdd-ssd-and-more">Storage (HDD, SSD, and More)</h3>
+<p>If registers are the closest shelves and RAM is the workspace, then <strong>storage</strong> is the large warehouse where data is kept long-term. Storage is where your computer permanently keeps files, programs, photos, operating system data, and everything else, even when the power is off.</p>
+<p>Storage is <strong>much slower</strong> than RAM, but it is also <strong>much larger</strong>, typically measured in hundreds of gigabytes or even terabytes.</p>
+<p>Common types of storage include:</p>
+<ul>
+<li><strong>HDD (Hard Disk Drive):</strong> Uses spinning disks and a moving read/write head. Much slower than SSDs but still common for large, inexpensive storage.</li>
+<li><strong>SSD (Solid-State Drive):</strong> Has no moving parts. Much faster than HDDs, vastly improving boot times, loading times, and responsiveness.</li>
+<li><strong>NVMe SSD:</strong> A newer type of SSD that connects directly to the CPU via PCIe, offering extremely high read/write speeds.</li>
+</ul>
+<p>Storage is <strong>non-volatile</strong>, meaning data remains even when the computer is turned off, unlike RAM.</p>
+<p>Whenever the system needs something that’s not in RAM, it loads it from storage. If RAM fills up, the operating system may even use the storage device as “overflow,” in a process called <em>paging</em> or <em>swapping</em>, though this is much slower.</p>
+<p>Storage isn’t designed for speed; it’s designed for <strong>capacity and long-term permanence</strong>.</p>
+<h2 id="how-memory-addressing-works">How Memory Addressing Works</h2>
+<p>So far, we’ve discussed different types of memory and storage, but how does the CPU locate specific data within all that memory? This is where <strong>memory addressing</strong> comes in.</p>
+<p>Every byte in RAM has a unique identifier, known as a <strong>memory address</strong>. You can think of RAM as a long row of tiny mailboxes, each with its own number starting from 0. When the CPU needs data, it provides the address of the mailbox where that data lives.</p>
+<p>For example, if the CPU wants the byte stored at address <code>1000</code>, it sends the number <code>1000</code> across the <strong>address bus</strong>. RAM receives this address, looks it up, and returns the correct data byte.</p>
+<h3 id="addresses-are-just-numbers"><strong>Addresses Are Just Numbers</strong></h3>
+<p>Memory addresses are simply binary numbers. A CPU with:</p>
+<ul>
+<li><strong>32-bit addressing</strong> can theoretically access up to 2³² bytes (4 GB) of memory</li>
+<li><strong>64-bit addressing</strong> can (in theory) access 2⁶⁴ bytes, an enormous number, far beyond what modern computers actually install</li>
+</ul>
+<p>This is one of the big reasons 64-bit CPUs became standard: they can address far more memory than 32-bit systems.</p>
+<h3 id="addressing-words-not-just-bytes"><strong>Addressing Words, Not Just Bytes</strong></h3>
+<p>While every byte has an address, the CPU often works with bigger chunks called <strong>words</strong>. The word size usually matches the CPU’s register size, which is why “32-bit” and “64-bit” processors get their names, so:</p>
+<ul>
+<li>A 32-bit CPU uses 32-bit (4-byte) words</li>
+<li>A 64-bit CPU uses 64-bit (8-byte) words</li>
+</ul>
+<p>Even though memory is byte-addressable, the CPU might fetch a whole word at once. This is because the CPU usually operates on full words at a time, not single bytes.</p>
+<h3 id="pointers-and-addresses"><strong>Pointers and Addresses</strong></h3>
+<p>When a program stores a memory address in a variable, that variable is called a <strong>pointer</strong>. Instead of holding actual data, it holds the <em>location</em> of data. You’ll encounter pointers in low-level programming (like C or assembly), and understanding memory addresses is key to using them correctly.</p>
+<h3 id="sequential-instructions"><strong>Sequential Instructions</strong></h3>
+<p>Instructions stored in memory also have addresses. The <strong>Program Counter (PC)</strong> holds the address of the next instruction, and the CPU increases it as it executes instructions sequentially, unless a jump or branch changes it.</p>
+<h3 id="how-the-cpu-sends-and-receives-addresses"><strong>How the CPU Sends and Receives Addresses</strong></h3>
+<p>The CPU communicates with memory through two main channels:</p>
+<ul>
+<li><strong>Address bus:</strong> sends <em>where</em> the data is</li>
+<li><strong>Data bus:</strong> sends the actual data back and forth</li>
+</ul>
+<p>When the CPU wants to read memory:</p>
+<ol>
+<li>It places an address on the address bus</li>
+<li>Memory responds by putting the requested data on the data bus</li>
+<li>The CPU reads that data</li>
+</ol>
+<p>When writing, the CPU places both the address <em>and</em> the data on the appropriate buses.</p>
+<h3 id="virtual-vs-physical-memory"><strong>Virtual vs. Physical Memory</strong></h3>
+<p>Modern operating systems do <strong>not</strong> let programs access physical RAM directly. Instead, every program sees its own private world of memory called <strong>virtual memory</strong>. When you see an address in a debugger like <code>0x00400000</code>, that number is <strong>not</strong> the true physical RAM location. It is a <em>virtual address</em> that must be translated.</p>
+<p>This translation is handled by a small hardware unit inside the CPU called the <strong>Memory Management Unit (MMU)</strong>.</p>
+<p>Why have virtual memory at all? Virtual memory gives us:</p>
+<ul>
+<li><strong>Protection:</strong> One program cannot read or overwrite another program.</li>
+<li><strong>Simplicity:</strong> Each program sees a nice, clean, continuous block of memory.</li>
+<li><strong>Flexibility:</strong> Programs can use more memory than physically installed (thanks to paging).</li>
+<li><strong>Sharing:</strong> System libraries can be shared between programs without copying them.</li>
+</ul>
+<h3 id="how-the-mapping-works">How the Mapping Works</h3>
+<p>To avoid translating billions of individual bytes, the OS divides memory into fixed-size blocks called <strong>pages,</strong> with a typical size of <strong>4 KB</strong>. Both <em>virtual memory</em> and <em>physical memory</em> are divided into these 4 KB units.</p>
+<p>So instead of mapping:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Virtual → Physical</span></span>
+<span class="line"><span>Byte 14 → Byte 214920</span></span>
+<span class="line"><span>Byte 15 → Byte 214921</span></span>
+<span class="line"><span>Byte 16 → Byte 214922</span></span></code></pre>
+<p>The system maps at page granularity:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Virtual Page #12 → Physical Page #203</span></span>
+<span class="line"><span>Virtual Page #13 → Physical Page #8</span></span>
+<span class="line"><span>Virtual Page #14 → (not in RAM — stored on disk)</span></span></code></pre>
+<p>Each program has its own <strong>page table</strong>, which is a big list that tells the MMU: “If the CPU accesses virtual page X, it actually lives at physical page Y.”</p>
+<h3 id="what-the-mmu-does-on-every-memory-access">What the MMU Does on Every Memory Access</h3>
+<p>Every time the CPU touches memory (load, store, fetch instruction), the MMU:</p>
+<ol>
+<li>
+<p><strong>Takes the virtual address</strong></p>
+</li>
+<li>
+<p><strong>Splits it into:</strong></p>
+<ul>
+<li>a <em>page number</em></li>
+<li>an <em>offset</em> inside the page</li>
+</ul>
+</li>
+<li>
+<p><strong>Looks up the page number in the page table</strong></p>
+</li>
+<li>
+<p><strong>Finds the physical page number</strong></p>
+</li>
+<li>
+<p><strong>Recombines</strong></p>
+<p>physical page number + offset</p>
+<p>to form the final <strong>physical address</strong></p>
+</li>
+<li>
+<p>RAM is accessed normally using that physical address.</p>
+</li>
+</ol>
+<p>This happens billions of times per second and is completely invisible to software. Additionally, to make these translations faster, the CPU stores recently used mappings in a tiny cache called the <strong>TLB (Translation Lookaside Buffer)</strong>, so most address translations never require a full page-table lookup.</p>
+<h3 id="translation-example">Translation Example</h3>
+<p>Virtual address:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>0x00403A10</span></span></code></pre>
+<p>Break into:</p>
+<ul>
+<li><strong>Virtual page number</strong> = 0x00403</li>
+<li><strong>Offset</strong> = 0xA10 (the location inside that 4 KB page)</li>
+</ul>
+<p>MMU finds:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Virtual page number = 0x00403</span></span>
+<span class="line"><span>Offset inside the page = 0xA10</span></span></code></pre>
+<p>Final physical address:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8;overflow-x:auto" tabindex="0" data-language="plaintext"><code><span class="line"><span>Physical Page 0x1A2C + offset 0xA10 = 0x1A2CA10</span></span></code></pre>
+<p>The CPU now reads or writes that physical address.</p>
+<h3 id="what-if-a-page-isnt-in-ram-page-faults"><strong>What If a Page Isn’t in RAM? (Page Faults)</strong></h3>
+<p>If the MMU sees that a virtual page isn’t currently loaded in RAM, the CPU triggers a <strong>page fault</strong>.</p>
+<p>The OS then:</p>
+<ol>
+<li>Pauses the program</li>
+<li>Loads the page from storage (SSD) into RAM</li>
+<li>Updates the page table</li>
+<li>Resumes the program</li>
+</ol>
+<p>This is how the system gives programs more “memory” than you physically have.</p>
+<h2 id="memory-hierarchy">Memory Hierarchy</h2>
+<p>Now that we’ve seen <em>how</em> memory works at a low level, we can look at how all these different types fit together into the overall structure of a computer’s memory system. All these different kinds of memory (registers, cache, RAM, storage) form what’s known as the <strong>memory hierarchy</strong>. Each level trades capacity for speed:</p>
+<ol>
+<li><strong>Registers</strong>: Tiny, fastest, directly inside the CPU</li>
+<li><strong>L1/L2/L3 Cache</strong>: Small, fast, close to the CPU</li>
+<li><strong>RAM</strong>: Large, much slower</li>
+<li><strong>Storage (SSD/HDD)</strong>: <strong>H</strong>uge, much slower</li>
+<li><strong>External storage/cloud</strong>: <strong>G</strong>igantic capacity, extremely slow</li>
+</ol>
+<p>As we move down the hierarchy:</p>
+<ul>
+<li><strong>Speed decreases</strong></li>
+<li><strong>Size increases</strong></li>
+<li><strong>Cost per byte decreases</strong></li>
+</ul>
+<p>The CPU always tries to work with data from the <strong>highest</strong> (fastest) level available. If the data isn’t there, it must fetch it from a slower level in a process called a <strong>memory access</strong>, which takes more time the further down the hierarchy it goes.</p>
+<p>This hierarchy is the backbone of computer performance. It allows the CPU to operate at high speed without needing gigabytes of expensive, ultra-fast memory.</p>
+<p>Much of computer architecture, from cache design to operating systems, exists to make this hierarchy feel as fast as possible to software.</p> </main> <div class="mt-20 grid grid-cols-1 gap-4 border-t border-gray-100 pt-12 sm:grid-cols-2"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/4-control-unit/" class="group flex flex-col items-start rounded-2xl border border-gray-100 p-6 transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase"> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path> </svg>
+Previous_Node
+</span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> The Control Unit: The Brain Inside the CPU </span> </a> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/6-cpu/" class="group flex flex-col items-end rounded-2xl border border-gray-100 p-6 text-right transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+Next_Node
+<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path> </svg> </span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> The CPU in Action: Mastering the Fetch-Decode-Execute Cycle </span> </a> </div> <div class="mt-16 rounded-3xl border border-gray-100 bg-gray-50/50 p-8"> <div class="mb-6 flex items-center justify-between"> <h3 class="text-sm font-bold tracking-widest text-gray-500 uppercase">
+Series:  <span class="text-blue-600">From Transistor to System: A Friendly Guide to Computer Architecture</span> </h3> <span class="text-xs font-medium text-gray-400"> 7 Chapters
+</span> </div> <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/1-transistor/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 1 </span> <span class="text-sm leading-tight font-bold"> Transistor </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 2 </span> <span class="text-sm leading-tight font-bold"> Logic </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 3 </span> <span class="text-sm leading-tight font-bold"> ALU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/4-control-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 4 </span> <span class="text-sm leading-tight font-bold"> CU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 bg-blue-600 text-white shadow-lg ring-2 shadow-blue-200 ring-blue-600 ring-offset-2 "> <span class="mb-1 text-[10px] font-bold uppercase text-blue-100">
+Ch. 5 </span> <span class="text-sm leading-tight font-bold"> Memory </span> <span class="absolute -top-1 -right-1 flex h-3 w-3"> <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span> <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span> </span> </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/6-cpu/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 6 </span> <span class="text-sm leading-tight font-bold"> CPU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/7-beyond/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 7 </span> <span class="text-sm leading-tight font-bold"> Beyond </span>  </a> </div> </div> </div> <aside class="hidden lg:col-span-4 lg:block xl:col-span-3"> <div class="no-scrollbar sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto py-2"> <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"> <h4 class="mb-4 text-xs font-bold tracking-widest text-gray-900 uppercase">
+On this page
+</h4> <nav class="space-y-3 text-sm"> <a href="#registers-cache-ram-and-storage" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Registers, Cache, RAM, and Storage </a><a href="#registers" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Registers </a><a href="#cache" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Cache </a><a href="#ram-main-memory" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> RAM (Main Memory) </a><a href="#storage-hdd-ssd-and-more" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Storage (HDD, SSD, and More) </a><a href="#how-memory-addressing-works" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> How Memory Addressing Works </a><a href="#addresses-are-just-numbers" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Addresses Are Just Numbers </a><a href="#addressing-words-not-just-bytes" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Addressing Words, Not Just Bytes </a><a href="#pointers-and-addresses" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Pointers and Addresses </a><a href="#sequential-instructions" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Sequential Instructions </a><a href="#how-the-cpu-sends-and-receives-addresses" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> How the CPU Sends and Receives Addresses </a><a href="#virtual-vs-physical-memory" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Virtual vs. Physical Memory </a><a href="#how-the-mapping-works" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> How the Mapping Works </a><a href="#what-the-mmu-does-on-every-memory-access" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> What the MMU Does on Every Memory Access </a><a href="#translation-example" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Translation Example </a><a href="#what-if-a-page-isnt-in-ram-page-faults" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> What If a Page Isn’t in RAM? (Page Faults) </a><a href="#memory-hierarchy" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Memory Hierarchy </a> </nav> </div> </div> </aside> </div> </article>  </div> <script type="module">window.onscroll=()=>{const o=document.body.scrollTop||document.documentElement.scrollTop,n=document.documentElement.scrollHeight-document.documentElement.clientHeight,t=o/n*100,e=document.getElementById("progress-bar");e&&(e.style.width=t+"%")};document.addEventListener("click",o=>{const n=o.target.closest("[data-snippet-trigger]");if(!n)return;const t=n.dataset.snippetTrigger;if(!t)return;const e=document.getElementById(`snippet-output-${t}`);if(e){window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:e.dataset.snippetLabel??t,outputText:(e.textContent??"").trim()}}));return}const s=document.getElementById(`snippet-graph-${t}`);if(s){const i=s.dataset.snippetData??"";let c=null;try{c=JSON.parse(i)}catch{}window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:s.dataset.snippetLabel??t,chartData:c}}))}});</script> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="2fyvh2" component-url="/assets/SnippetModal.AUy3O0zP.js" component-export="default" renderer-url="/assets/client.CTd2fbS1.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;SnippetModal&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island>  </main> <footer class="relative border-t border-gray-100 bg-white pt-24 pb-12"> <div class="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] mask-[linear-gradient(to_bottom,white,transparent)] opacity-40 [bg-size:32px_32px]"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="grid grid-cols-1 gap-12 md:grid-cols-12 lg:gap-24"> <div class="md:col-span-4 lg:col-span-5"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-transform group-hover:rotate-12">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600">Confessions</span> </span> </a> <p class="mt-6 max-w-sm text-sm leading-relaxed font-medium text-gray-500">
+Discover the logic, math, and beauty behind the code, one concept at a time.
+</p> </div> <div class="md:col-span-8 lg:col-span-7"> <div class="grid grid-cols-2 gap-8 sm:grid-cols-3"> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Knowledge
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li><a href="/posts/" class="hover:text-blue-600">Articles</a></li> <li> <a href="/tags/" class="hover:text-blue-600">Tags</a> </li> <li> <a href="/collections/" class="hover:text-blue-600">Series</a> </li> <li> <a href="/search/" class="hover:text-blue-600">Search</a> </li> </ul> </div> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Project
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li> <a href="/about/" class="hover:text-blue-600">The Architects</a> </li> <li><a href="/rss.xml" class="hover:text-blue-600">RSS Stream</a></li> <li><a href="/privacy/" class="hover:text-blue-600">Legal Bits</a></li> <li> <button type="button" data-cc="show-preferencesModal" class="hover:text-blue-600">
+Cookie Settings
+</button> </li> </ul> </div> <div class="col-span-2 sm:col-span-1"> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Status
+</h3> <div class="mt-6 flex flex-col gap-3"> <div class="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-700/10"> <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"></span>
+SYSTEMS OPERATIONAL
+</div> <p class="px-1 font-mono text-[11px] text-gray-400">v4.0.26-stable</p> </div> </div> </div> </div> </div> <div class="mt-20 flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row"> <p class="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+&copy; 2026 BIOS Confessions
+</p> </div>  </div> </footer>  <div id="cc-container"></div> <script type="module" src="/assets/CookieConsent.astro_astro_type_script_index_0_lang.BBRHWC0c.js"></script> </body></html>

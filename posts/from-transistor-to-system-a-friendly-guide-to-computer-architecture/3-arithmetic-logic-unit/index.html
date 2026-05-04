@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.ico"><meta name="generator" content="Astro v5.18.1"><link rel="sitemap" href="/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="BIOS Confessions" href="/rss.xml"><link rel="canonical" href="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/"><title>How an ALU Works: The Heart of CPU Architecture Explained | BIOS Confessions</title><meta name="title" content="How an ALU Works: The Heart of CPU Architecture Explained"><meta name="description" content="Don't just read about the ALU, learn how to build one. Let's break down the Arithmetic Logic Unit into 1-bit circuits using adders, multiplexers, and logic gates. Perfect for students of computer architecture."><meta name="keywords" content="how an ALU works, arithmetic logic unit logic gates, 1-bit ALU design tutorial, cpu control unit vs alu, binary adder subtractor circuit, multiplexer in cpu architecture"><meta property="og:title" content="How an ALU Works: The Heart of CPU Architecture Explained"><meta property="og:description" content="Don't just read about the ALU, learn how to build one. Let's break down the Arithmetic Logic Unit into 1-bit circuits using adders, multiplexers, and logic gates. Perfect for students of computer architecture."><meta property="og:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/"><meta property="og:type" content="article"><meta property="og:site_name" content="BIOS Confessions"><meta property="twitter:title" content="How an ALU Works: The Heart of CPU Architecture Explained"><meta property="twitter:description" content="Don't just read about the ALU, learn how to build one. Let's break down the Arithmetic Logic Unit into 1-bit circuits using adders, multiplexers, and logic gates. Perfect for students of computer architecture."><meta property="twitter:image" content="https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png"><meta property="twitter:url" content="https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/"><meta property="twitter:card" content="summary_large_image"><script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-E96HPDSNG8"></script><script type="text/partytown">(function(){const gTag = "G-E96HPDSNG8";
+
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied'
+            });
+            gtag('config', gTag);
+        })();</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"BIOS Confessions","url":"https://www.biosconfessions.com"}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.biosconfessions.com"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://www.biosconfessions.com/posts"},{"@type":"ListItem","position":3,"name":"From transistor to system a friendly guide to computer architecture","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture"},{"@type":"ListItem","position":4,"name":"3 arithmetic logic unit","item":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit"}]}</script> <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"How an ALU Works: The Heart of CPU Architecture Explained","description":"Don't just read about the ALU, learn how to build one. Let's break down the Arithmetic Logic Unit into 1-bit circuits using adders, multiplexers, and logic gates. Perfect for students of computer architecture.","image":"https://www.biosconfessions.com/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a.png","proficiencyLevel":"Intermediate","articleSection":["Computer Architecture","Electrical Engineering","Logic"],"author":{"@type":"Person","name":"Gianni","jobTitle":"Software Engineer","url":"https://www.biosconfessions.com/about#gianni","sameAs":["https://github.com/gianni1998"],"worksFor":{"@type":"Organization","name":"BIOS Confessions"}},"datePublished":"2025-11-02T00:00:00.000Z","dateModified":"2026-03-29T00:00:00.000Z","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/"},"isPartOf":{"@type":"CreativeWorkSeries","name":"From Transistor to System: A Friendly Guide to Computer Architecture","url":"https://www.biosconfessions.com/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture","position":3},"publisher":{"@type":"Organization","@id":"https://www.biosconfessions.com/about","name":"BIOS Confessions","logo":{"@type":"ImageObject","url":"https://www.biosconfessions.com/logo.svg"}},"keywords":"how an ALU works, arithmetic logic unit logic gates, 1-bit ALU design tutorial, cpu control unit vs alu, binary adder subtractor circuit, multiplexer in cpu architecture","inLanguage":"en-US"}</script><link rel="stylesheet" href="/assets/_slug_.DJ5tu4Ac.css">
+<link rel="stylesheet" href="/assets/_slug_.C5IuhOBj.css"><script>!(function(w,p,f,c){if(!window.crossOriginIsolated && !navigator.serviceWorker) return;c=w[p]=Object.assign(w[p]||{},{"lib":"/assets/","debug":false});c[f]=(c[f]||[]).concat(["dataLayer.push"])})(window,'partytown','forward');/* Partytown 0.13.2 - MIT QwikDev */
+const t={preserveBehavior:!1},e=e=>{if("string"==typeof e)return[e,t];const[n,r=t]=e;return[n,{...t,...r}]},n=Object.freeze((t=>{const e=new Set;let n=[];do{Object.getOwnPropertyNames(n).forEach((t=>{"function"==typeof n[t]&&e.add(t)}))}while((n=Object.getPrototypeOf(n))!==Object.prototype);return Array.from(e)})());!function(t,r,o,i,a,s,c,l,d,p,u=t,f){function h(){f||(f=1,"/"==(c=(s.lib||"/~partytown/")+(s.debug?"debug/":""))[0]&&(d=r.querySelectorAll('script[type="text/partytown"]'),i!=t?i.dispatchEvent(new CustomEvent("pt1",{detail:t})):(l=setTimeout(v,(null==s?void 0:s.fallbackTimeout)||1e4),r.addEventListener("pt0",w),a?y(1):o.serviceWorker?o.serviceWorker.register(c+(s.swPath||"partytown-sw.js"),{scope:c}).then((function(t){t.active?y():t.installing&&t.installing.addEventListener("statechange",(function(t){"activated"==t.target.state&&y()}))}),console.error):v())))}function y(e){p=r.createElement(e?"script":"iframe"),t._pttab=Date.now(),e||(p.style.display="block",p.style.width="0",p.style.height="0",p.style.border="0",p.style.visibility="hidden",p.setAttribute("aria-hidden",!0)),p.src=c+"partytown-"+(e?"atomics.js?v=0.13.2":"sandbox-sw.html?"+t._pttab),r.querySelector(s.sandboxParent||"body").appendChild(p)}function v(n,o){for(w(),i==t&&(s.forward||[]).map((function(n){const[r]=e(n);delete t[r.split(".")[0]]})),n=0;n<d.length;n++)(o=r.createElement("script")).innerHTML=d[n].innerHTML,o.nonce=s.nonce,r.head.appendChild(o);p&&p.parentNode.removeChild(p)}function w(){clearTimeout(l)}s=t.partytown||{},i==t&&(s.forward||[]).map((function(r){const[o,{preserveBehavior:i}]=e(r);u=t,o.split(".").map((function(e,r,o){var a;u=u[o[r]]=r+1<o.length?u[o[r]]||(a=o[r+1],n.includes(a)?[]:{}):(()=>{let e=null;if(i){const{methodOrProperty:n,thisObject:r}=((t,e)=>{let n=t;for(let t=0;t<e.length-1;t+=1)n=n[e[t]];return{thisObject:n,methodOrProperty:e.length>0?n[e[e.length-1]]:void 0}})(t,o);"function"==typeof n&&(e=(...t)=>n.apply(r,...t))}return function(){let n;return e&&(n=e(arguments)),(t._ptf=t._ptf||[]).push(o,arguments),n}})()}))})),"complete"==r.readyState?h():(t.addEventListener("DOMContentLoaded",h),t.addEventListener("load",h))}(window,document,navigator,top,window.crossOriginIsolated);;(e=>{e.addEventListener("astro:before-swap",e=>{let r=document.body.querySelector("iframe[src*='/~partytown/']");if(r)e.newDocument.body.append(r)})})(document);</script></head> <body>  <header class="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/70 backdrop-blur-xl"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="flex items-center justify-between py-4"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-all group-hover:rotate-6 group-hover:bg-blue-600">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600 italic">Confessions</span> </span> </a> <nav class="hidden items-center gap-10 text-[13px] font-bold tracking-widest text-gray-500 uppercase md:flex"> <a href="/posts/" class="transition-colors hover:text-blue-600">Articles</a> <a href="/about/" class="transition-colors hover:text-blue-600">About</a> <a href="/search/" class="transition-colors hover:text-blue-600"> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3.5" stroke="currentColor" class="size-4" data-slot="icon" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path> </svg> </a> <div class="h-4 w-px bg-gray-200"></div> <a href="/posts/" class="relative inline-flex items-center gap-2 rounded-xl bg-gray-900 px-6 py-2.5 text-white transition-all hover:bg-blue-600 hover:ring-4 hover:ring-blue-100"> <span class="relative">Read Now</span> <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path> </svg> </a> </nav> <button id="menu-toggle" class="group relative h-10 w-10 rounded-xl border border-gray-100 bg-white p-2 transition-colors hover:bg-gray-50 md:hidden" aria-label="Toggle Menu"> <div class="flex flex-col gap-1.5 transition-all group-active:scale-95"> <span id="line-1" class="h-0.5 w-6 rounded-full bg-gray-900 transition-all"></span> <span id="line-2" class="h-0.5 w-6 rounded-full bg-blue-600 transition-all"></span> </div> </button> </div>  </div> <div id="mobile-menu" class="hidden overflow-hidden border-t border-gray-100 bg-white/95 backdrop-blur-md md:hidden"> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <nav class="flex flex-col gap-6 py-10 text-xs font-bold tracking-[0.2em] text-gray-400 uppercase"> <a href="/posts" class="flex items-center justify-between text-gray-900">
+Articles <span class="text-blue-600">01</span> </a> <a href="/about" class="flex items-center justify-between text-gray-900">
+About <span class="text-blue-600">02</span> </a> <a href="/search" class="flex items-center justify-between text-gray-900">
+Search <span class="text-blue-600">03</span> </a> </nav>  </div> </div> </header> <script type="module">const l=document.getElementById("menu-toggle"),e=document.getElementById("mobile-menu"),t=document.getElementById("line-1"),n=document.getElementById("line-2");l?.addEventListener("click",()=>{const s=!e?.classList.contains("hidden");e?.classList.toggle("hidden"),s?(t?.classList.remove("translate-y-1","rotate-45"),n?.classList.remove("-translate-y-1","-rotate-45")):(t?.classList.add("translate-y-1","rotate-45"),n?.classList.add("-translate-y-1","-rotate-45"))});</script> <main id="main" role="main">  <div id="progress-bar" class="fixed top-0 left-0 z-100 h-1 bg-blue-600 transition-all duration-150" style="width: 0%"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <article class="relative mb-20 min-h-screen"> <div class="grid grid-cols-1 gap-12 pt-16 lg:grid-cols-12"> <div class="lg:col-span-8 xl:col-span-9"> <header class="mb-12"> <div class="mb-6 flex flex-wrap items-center gap-4 text-sm font-medium"> <div class="flex items-center gap-2 text-blue-600"> <time datetime="2025-11-02T00:00:00.000Z"> Nov 2, 2025 </time> </div> <div class="text-gray-400 italic"> <span>•</span> <span class="ml-2">
+Updated: Mar 29, 2026 </span> </div> <span class="text-gray-300">|</span> <span class="text-gray-500">7 min</span> </div> <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-6xl"> How an ALU Works: The Heart of CPU Architecture Explained </h1> <p class="mt-6 max-w-2xl text-xl leading-relaxed text-gray-500"> Don&#39;t just read about the ALU, learn how to build one. Let&#39;s break down the Arithmetic Logic Unit into 1-bit circuits using adders, multiplexers, and logic gates. Perfect for students of computer architecture. </p> <div class="mt-10 overflow-hidden rounded-3xl bg-gray-100 shadow-2xl"> <img src="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp" srcset="/assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_2mJ4FS.webp 400w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_Z2i1HwY.webp 800w, /assets/computer-architecture-transistor-to-system-guide.BpaNqm1a_1RYItd.webp 1024w" alt="Cover image for the blog series &#34;From Transistor to System: A Friendly Guide to Computer Architecture,&#34; showing various computer components in a cheerful, cartoon style" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px" loading="eager" fetchpriority="high" decoding="sync" width="1024" height="1024" class="aspect-video w-full object-cover transition-transform duration-500 hover:scale-102"> </div> </header> <main class="prose prose-blue prose-lg prose-pre:bg-gray-900 prose-pre:rounded-2xl prose-img:rounded-3xl prose-headings:scroll-mt-24 w-full max-w-none"> <p>In the previous chapter, we constructed circuits that could add numbers together, starting from a simple <strong>Half-Adder</strong> and progressing to an <strong>8-bit Adder</strong>. That was our first glimpse into how arithmetic happens inside a computer. But adders are just the beginning. Computers need a dedicated component to perform not only arithmetic but also logical decisions. This is where the <strong>Arithmetic Logic Unit</strong>, or <strong>ALU</strong>, comes in.</p>
+<h2 id="arithmetic-what">Arithmetic… what?</h2>
+<p>As mentioned earlier, the 8-bit adder was our first look at how arithmetic works inside a computer. However, a computer needs to do much more than add two numbers. With some clever circuitry, we can extend our 8-bit adder to create an 8-bit Subtractor. If we fix the B input of both the adder and subtractor to 00000001, we effectively create an incrementer and a decrementer, respectively.</p>
+<p>Inside the CPU, all these circuits live together inside a special component called the <strong>Arithmetic Logic Unit (ALU)</strong>. Whenever your computer needs to perform arithmetic operations or make logical decisions, the ALU is the one doing the work. You can think of it as the calculator at the heart of the processor, but one that also understands logic.</p>
+<p>At its core, an ALU is a circuit that takes <strong>inputs</strong>, performs an <strong>operation</strong>, and produces an <strong>output</strong>. The inputs usually come from CPU registers, and the operation performed depends on what the program instructs. The result is then sent back to a register or to memory for later use.</p>
+<p>What makes the ALU powerful is its <strong>flexibility</strong>. The same hardware can perform many different tasks depending on the <strong>control signals</strong> it receives. Depending on the control signals it receives, the ALU might add two numbers one moment, compare them the next, or even shift bits left or right.</p>
+<p>Modern ALUs are often divided into two main parts:</p>
+<ul>
+<li><strong>Arithmetic Unit (AU):</strong> Handles mathematical operations such as addition, subtraction, multiplication, and division.</li>
+<li><strong>Logic Unit (LU):</strong> Handles logical operations such as AND, OR, XOR, and NOT.</li>
+</ul>
+<p>Some CPUs take this even further, including separate arithmetic units for different types of data. For example, one unit might handle <strong>fixed-point arithmetic</strong> (integers), while another handles <strong>floating-point arithmetic</strong> (real numbers used in scientific or graphics calculations).</p>
+<h2 id="arithmetic">Arithmetic</h2>
+<p>Let’s take a closer look at how the circuits inside the ALU perform arithmetic. We already know from the previous chapter how an 8-bit adder works, and how to build incrementers and decrementers from it. But we haven’t yet seen how a <strong>subtractor</strong> works. Let’s start there.</p>
+<p>Just like before, we begin small, with the <strong>Half-Subtractor</strong>. The Half-Subtractor is similar to the Half-Adder: it has two inputs and two outputs. However, unlike the Half-Adder, it includes a <strong>NOT gate</strong> before the AND gate.</p>
+<p>The first output, referred to as the <strong>Difference</strong>, represents the result of subtracting B from A. The second output, the <strong>Borrow</strong>, indicates that when the digit being subtracted (B) is larger than the digit it’s subtracted from (A), we need to “borrow” from the next higher bit, just like in decimal subtraction.</p>
+<p>Here’s how that looks conceptually:</p>
+<p><img src="/assets/how-a-half-subtractor-works-logic-circuit-animation.Bjt1SZc0_kcS9x.webp" alt="Animated schematic diagram of a Half-Subtractor" loading="lazy" decoding="async" fetchpriority="auto" width="1920" height="1080"></p>
+<p>The truth table for a Half-Subtractor is as follows:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>A</th><th>B</th><th>Difference</th><th>Borrow</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody></table>
+<p>To create the <strong>Full-Subtractor</strong>, we combine two Half-Subtractors. It has three inputs: <strong>A</strong>, <strong>B</strong>, and <strong>B-in</strong> (the borrow from a previous stage).</p>
+<ul>
+<li><strong>A</strong> and <strong>B</strong> connect to the first Half-Subtractor.</li>
+<li>Its <strong>Difference</strong> output connects to the A input of the second Half-Subtractor, while <strong>B-in</strong> connects to its B input.</li>
+<li>The two <strong>Borrow</strong> outputs are combined through an <strong>OR gate</strong> to produce a single <strong>Borrow out (B-out)</strong>.</li>
+</ul>
+<p>Connecting eight of these Full-Subtractors forms an <strong>8-bit Subtractor</strong>, which can handle multi-bit binary subtraction, just like the adder, but with borrowing instead of carrying.</p>
+<p><img src="/assets/full-subtractor-logic-circuit.B_iQJiU0_1qzAFU.webp" alt="Schematic diagram of Full-Subtractor" loading="lazy" decoding="async" fetchpriority="auto" width="3000" height="1688"></p>
+<h2 id="logic">Logic</h2>
+<p>Arithmetic is only half the story; the other half is logic. The <strong>Logic Unit</strong> performs operations like <strong>AND</strong>, <strong>OR</strong>, <strong>XOR</strong>, and <strong>NOT</strong> directly on the binary bits of its inputs. Why does this matter? Because logic operations allow a computer to <strong>make decisions</strong>. For example, the ALU can compare two numbers to determine whether they are equal, greater, or less than. This information is critical for loops, conditional statements, and control flow in programs. Without logic operations, a computer could calculate, but it couldn’t <strong>decide</strong>.</p>
+<h2 id="control-signals">Control Signals</h2>
+<p>Now that we understand what the ALU does and how it works, one question remains: how does it know what operation to perform? The ALU doesn’t choose its operation on its own. Instead, it listens to instructions sent by the Control Unit in the form of binary codes known as opcodes (operation codes). Depending on the opcode, the ALU may perform addition, subtraction, comparison, or logical operations.</p>
+<p>Here’s an example of how different control signals might map to ALU operations:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Opcode (Control Signal)</strong></th><th><strong>Operation</strong></th></tr></thead><tbody><tr><td>000</td><td>ADD</td></tr><tr><td>001</td><td>SUBTRACT</td></tr><tr><td>010</td><td>AND</td></tr><tr><td>011</td><td>OR</td></tr><tr><td>100</td><td>XOR</td></tr><tr><td>101</td><td>NOT</td></tr></tbody></table>
+<p>Inside the ALU, a <strong>multiplexer (MUX)</strong> acts as a selector. You can think of a multiplexer as an electronic switch that selects one of many inputs and forwards it to a single output, based on control signals. Each operation (add, subtract, AND, and so on) is implemented as a separate circuit. All of them receive the same inputs and produce their results <strong>in parallel</strong>, but only one of these outputs is actually sent to the final result line. The MUX, controlled by the opcode, chooses which one.</p>
+<p>This approach might seem inefficient at first; after all, why compute everything if you only need one result? But it makes the ALU incredibly fast. Since all operations are ready at once, the MUX can instantly select the required output without waiting for a circuit to “turn on.”</p>
+<h2 id="building-a-simple-1-bit-alu">Building a Simple 1-bit ALU</h2>
+<p>Now that we know how arithmetic and logic operations work, and how control signals tell the ALU what to do, let’s put everything together and build a simple <strong>1-bit ALU</strong>.</p>
+<p>A 1-bit ALU performs one operation on one pair of input bits (<strong>A</strong> and <strong>B</strong>) at a time. When we combine multiple 1-bit ALUs (usually eight, sixteen, or thirty-two of them), we get a multi-bit ALU capable of handling entire binary numbers. But just like before, we’ll start small.</p>
+<h3 id="the-idea">The Idea</h3>
+<p>Our ALU will have:</p>
+<ul>
+<li>Two <strong>inputs</strong>: A and B</li>
+<li>One <strong>control signal</strong>: to decide what operation to perform</li>
+<li>One <strong>output</strong>: the result of that operation</li>
+</ul>
+<p>For simplicity, let’s say our ALU only performs the following operations:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Opcode</strong></th><th><strong>Operation</strong></th><th><strong>Description</strong></th></tr></thead><tbody><tr><td>00</td><td>AND</td><td>Logical AND between A and B</td></tr><tr><td>01</td><td>OR</td><td>Logical OR between A and B</td></tr><tr><td>10</td><td>XOR</td><td>Logical XOR between A and B</td></tr><tr><td>11</td><td>ADD</td><td>Adds A and B (with carry out)</td></tr></tbody></table>
+<p>In circuit form, we’ll have <strong>four separate mini-circuits,</strong> one for each operation. The outputs from all four will feed into a <strong>multiplexer (MUX)</strong>. The MUX then selects which output to send to the final result, based on the control signal.</p>
+<p><img src="/assets/1-bit-alu-logic-circuit.z9cFd1Sr_1WsNC7.webp" alt="Schematic of a simple 1 bit ALU" loading="lazy" decoding="async" fetchpriority="auto" width="3000" height="1688"></p>
+<h3 id="how-it-works-step-by-step">How it works step-by-step</h3>
+<ol>
+<li><strong>Inputs arrive:</strong> Two bits, A and B, are fed into the ALU.</li>
+<li><strong>Each mini-circuit does its job:</strong>
+<ul>
+<li>The <strong>AND gate</strong> outputs <code>A AND B</code>.</li>
+<li>The <strong>OR gate</strong> outputs <code>A OR B</code>.</li>
+<li>The XOR gate outputs <code>A XOR B</code>.</li>
+<li>The <strong>adder</strong> calculates <code>A + B</code>.</li>
+</ul>
+</li>
+<li><strong>Opcode is set:</strong> The CPU sends a 2-bit control signal telling the ALU which operation to use.</li>
+<li><strong>MUX selects output:</strong> The multiplexer chooses the correct result and passes it to the output line.</li>
+</ol>
+<p>Here’s an example of how it behaves:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>A</strong></th><th><strong>B</strong></th><th><strong>Control</strong></th><th><strong>Operation</strong></th><th><strong>Result</strong></th></tr></thead><tbody><tr><td>0</td><td>1</td><td>00</td><td>AND</td><td>0</td></tr><tr><td>0</td><td>1</td><td>01</td><td>OR</td><td>1</td></tr><tr><td>1</td><td>1</td><td>10</td><td>XOR</td><td>0</td></tr><tr><td>0</td><td>1</td><td>11</td><td>ADD</td><td>1</td></tr></tbody></table>
+<h2 id="summary">Summary</h2>
+<ul>
+<li>The <strong>ALU</strong> is the part of the CPU that performs both arithmetic and logic operations.</li>
+<li>It consists of an <strong>Arithmetic Unit (AU)</strong> and a <strong>Logic Unit (LU)</strong>.</li>
+<li><strong>Control signals</strong> from the control unit tell the ALU which operation to perform.</li>
+<li>A <strong>multiplexer (MUX)</strong> selects the correct operation result.</li>
+</ul>
+<p>In the next chapter, we’ll meet the <strong>Control Unit,</strong> the “brain” of the CPU that tells the ALU and every other component exactly what to do and when to do it.</p> </main> <div class="mt-20 grid grid-cols-1 gap-4 border-t border-gray-100 pt-12 sm:grid-cols-2"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/" class="group flex flex-col items-start rounded-2xl border border-gray-100 p-6 transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase"> <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path> </svg>
+Previous_Node
+</span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> Logic Gates &amp; Memory: Building an 8-Bit Adder from Scratch </span> </a> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/4-control-unit/" class="group flex flex-col items-end rounded-2xl border border-gray-100 p-6 text-right transition-all hover:border-blue-200 hover:bg-gray-50/50"> <span class="mb-2 flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+Next_Node
+<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path> </svg> </span> <span class="line-clamp-1 text-sm font-bold text-gray-900"> The Control Unit: The Brain Inside the CPU </span> </a> </div> <div class="mt-16 rounded-3xl border border-gray-100 bg-gray-50/50 p-8"> <div class="mb-6 flex items-center justify-between"> <h3 class="text-sm font-bold tracking-widest text-gray-500 uppercase">
+Series:  <span class="text-blue-600">From Transistor to System: A Friendly Guide to Computer Architecture</span> </h3> <span class="text-xs font-medium text-gray-400"> 7 Chapters
+</span> </div> <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"> <a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/1-transistor/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 1 </span> <span class="text-sm leading-tight font-bold"> Transistor </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/2-logic-gates/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 2 </span> <span class="text-sm leading-tight font-bold"> Logic </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/3-arithmetic-logic-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 bg-blue-600 text-white shadow-lg ring-2 shadow-blue-200 ring-blue-600 ring-offset-2 "> <span class="mb-1 text-[10px] font-bold uppercase text-blue-100">
+Ch. 3 </span> <span class="text-sm leading-tight font-bold"> ALU </span> <span class="absolute -top-1 -right-1 flex h-3 w-3"> <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span> <span class="relative inline-flex h-3 w-3 rounded-full bg-white"></span> </span> </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/4-control-unit/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 4 </span> <span class="text-sm leading-tight font-bold"> CU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/5-memory/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 5 </span> <span class="text-sm leading-tight font-bold"> Memory </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/6-cpu/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 6 </span> <span class="text-sm leading-tight font-bold"> CPU </span>  </a><a href="/posts/from-transistor-to-system-a-friendly-guide-to-computer-architecture/7-beyond/" class="relative flex flex-col items-center justify-center rounded-xl p-4 text-center transition-all duration-200 border border-gray-100 bg-white text-gray-600 hover:border-blue-300 hover:text-blue-600 hover:shadow-md "> <span class="mb-1 text-[10px] font-bold uppercase text-gray-400">
+Ch. 7 </span> <span class="text-sm leading-tight font-bold"> Beyond </span>  </a> </div> </div> </div> <aside class="hidden lg:col-span-4 lg:block xl:col-span-3"> <div class="no-scrollbar sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto py-2"> <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"> <h4 class="mb-4 text-xs font-bold tracking-widest text-gray-900 uppercase">
+On this page
+</h4> <nav class="space-y-3 text-sm"> <a href="#arithmetic-what" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Arithmetic… what? </a><a href="#arithmetic" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Arithmetic </a><a href="#logic" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Logic </a><a href="#control-signals" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Control Signals </a><a href="#building-a-simple-1-bit-alu" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Building a Simple 1-bit ALU </a><a href="#the-idea" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> The Idea </a><a href="#how-it-works-step-by-step" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> How it works step-by-step </a><a href="#summary" class="block text-gray-500 transition hover:translate-x-1 hover:text-blue-600"> Summary </a> </nav> </div> </div> </aside> </div> </article>  </div> <script type="module">window.onscroll=()=>{const o=document.body.scrollTop||document.documentElement.scrollTop,n=document.documentElement.scrollHeight-document.documentElement.clientHeight,t=o/n*100,e=document.getElementById("progress-bar");e&&(e.style.width=t+"%")};document.addEventListener("click",o=>{const n=o.target.closest("[data-snippet-trigger]");if(!n)return;const t=n.dataset.snippetTrigger;if(!t)return;const e=document.getElementById(`snippet-output-${t}`);if(e){window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:e.dataset.snippetLabel??t,outputText:(e.textContent??"").trim()}}));return}const s=document.getElementById(`snippet-graph-${t}`);if(s){const i=s.dataset.snippetData??"";let c=null;try{c=JSON.parse(i)}catch{}window.dispatchEvent(new CustomEvent("bios:open-snippet",{detail:{id:t,label:s.dataset.snippetLabel??t,chartData:c}}))}});</script> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="2fyvh2" component-url="/assets/SnippetModal.AUy3O0zP.js" component-export="default" renderer-url="/assets/client.CTd2fbS1.js" props="{}" ssr client="only" opts="{&quot;name&quot;:&quot;SnippetModal&quot;,&quot;value&quot;:&quot;react&quot;}"></astro-island>  </main> <footer class="relative border-t border-gray-100 bg-white pt-24 pb-12"> <div class="absolute inset-0 -z-10 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] mask-[linear-gradient(to_bottom,white,transparent)] opacity-40 [bg-size:32px_32px]"></div> <div class="mx-auto w-full max-w-6xl px-4 py-1 sm:px-6 lg:px-8">  <div class="grid grid-cols-1 gap-12 md:grid-cols-12 lg:gap-24"> <div class="md:col-span-4 lg:col-span-5"> <a href="/" class="group flex items-center gap-3"> <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-xs font-bold text-white transition-transform group-hover:rotate-12">
+/
+</div> <span class="text-xl font-black tracking-tighter text-gray-900 uppercase">
+BIOS<span class="text-blue-600">Confessions</span> </span> </a> <p class="mt-6 max-w-sm text-sm leading-relaxed font-medium text-gray-500">
+Discover the logic, math, and beauty behind the code, one concept at a time.
+</p> </div> <div class="md:col-span-8 lg:col-span-7"> <div class="grid grid-cols-2 gap-8 sm:grid-cols-3"> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Knowledge
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li><a href="/posts/" class="hover:text-blue-600">Articles</a></li> <li> <a href="/tags/" class="hover:text-blue-600">Tags</a> </li> <li> <a href="/collections/" class="hover:text-blue-600">Series</a> </li> <li> <a href="/search/" class="hover:text-blue-600">Search</a> </li> </ul> </div> <div> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Project
+</h3> <ul class="mt-6 space-y-4 text-sm font-medium text-gray-500"> <li> <a href="/about/" class="hover:text-blue-600">The Architects</a> </li> <li><a href="/rss.xml" class="hover:text-blue-600">RSS Stream</a></li> <li><a href="/privacy/" class="hover:text-blue-600">Legal Bits</a></li> <li> <button type="button" data-cc="show-preferencesModal" class="hover:text-blue-600">
+Cookie Settings
+</button> </li> </ul> </div> <div class="col-span-2 sm:col-span-1"> <h3 class="text-xs font-bold tracking-widest text-gray-900 uppercase">
+Status
+</h3> <div class="mt-6 flex flex-col gap-3"> <div class="flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-[11px] font-bold text-emerald-700 ring-1 ring-emerald-700/10"> <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500"></span>
+SYSTEMS OPERATIONAL
+</div> <p class="px-1 font-mono text-[11px] text-gray-400">v4.0.26-stable</p> </div> </div> </div> </div> </div> <div class="mt-20 flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row"> <p class="text-[11px] font-bold tracking-widest text-gray-400 uppercase">
+&copy; 2026 BIOS Confessions
+</p> </div>  </div> </footer>  <div id="cc-container"></div> <script type="module" src="/assets/CookieConsent.astro_astro_type_script_index_0_lang.BBRHWC0c.js"></script> </body></html>
